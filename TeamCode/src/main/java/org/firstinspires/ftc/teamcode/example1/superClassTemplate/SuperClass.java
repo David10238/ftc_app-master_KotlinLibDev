@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.superClassTemplate;
+package org.firstinspires.ftc.teamcode.example1.superClassTemplate;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 

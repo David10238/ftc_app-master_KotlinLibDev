@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.example;
+package org.firstinspires.ftc.teamcode.example1.example;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.superClassTemplate.SuperClass;
+import org.firstinspires.ftc.teamcode.example1.superClassTemplate.SuperClass;
 
 /**
  * Created by David Lukens on 7/23/2018.
