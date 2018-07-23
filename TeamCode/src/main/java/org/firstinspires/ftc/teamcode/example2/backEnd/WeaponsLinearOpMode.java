@@ -15,6 +15,7 @@ public abstract class WeaponsLinearOpMode<robotType extends HardwareClass> exten
 
 	public void handleFlow(boolean auto) {
 		this.auto = auto;
+		initiate();
 		waitForStart();
 		run();
 	}
