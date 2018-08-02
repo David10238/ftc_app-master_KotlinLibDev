@@ -16,8 +16,8 @@ abstract class RobotTemplate (val opMode:RechargedLinearOpMode<RobotTemplate>){
         hMap = opMode.hardwareMap
     }
 
-    abstract fun init()
-    abstract fun onStart()
+    open fun init(){}
+    open fun onStart(){}
     abstract fun autoPostInit()
 
     fun start(){

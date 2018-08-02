@@ -6,7 +6,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
  * Created by David Lukens on 8/2/2018.
  */
 
-class BlueAuto<rt:RobotTemplate> : RechargedLinearOpMode<rt>(){
+abstract class BlueAuto<rt:RobotTemplate>(createRobot:(RechargedLinearOpMode<rt>) -> rt) : RechargedLinearOpMode<rt>(createRobot){
     override fun runOpMode() {
         alliance = Alliance.BLUE
         handleFlow(true)

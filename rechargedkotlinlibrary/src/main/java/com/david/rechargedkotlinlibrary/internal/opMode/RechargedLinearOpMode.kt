@@ -27,5 +27,8 @@ abstract class RechargedLinearOpMode<rt:RobotTemplate>(private val createRobot:(
         if(!autonomous)
             robot.start()
         runtime.reset()
+        run()
     }
+
+    abstract fun run()
 }
