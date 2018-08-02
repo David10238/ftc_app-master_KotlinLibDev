@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime
 /**
  * Created by David Lukens on 8/2/2018.
  */
-abstract class RechargedLinearOpMode<rt:RobotTemplate>(private val createRobotTemplate: (RechargedLinearOpMode<rt>) -> rt = {rechargedLinearOpMode -> rt(rechargedLinearOpMode)}) : LinearOpMode(){
+abstract class RechargedLinearOpMode<rt:RobotTemplate>(private val createRobot:(RechargedLinearOpMode<rt>) -> rt) : LinearOpMode(){
     lateinit var robot:rt
 
     var alliance:Alliance = Alliance.FLUID
@@ -18,7 +18,14 @@ abstract class RechargedLinearOpMode<rt:RobotTemplate>(private val createRobotTe
 
     fun handleFlow(autonomous:Boolean){
         this.autonomous = autonomous
+        robot = createRobot(this)
+        if(autonomous)
+            robot.start()
         waitForStart()
+        if(autonomous)
+            robot.autoPostInit()
+        if(!autonomous)
+            robot.start()
         runtime.reset()
     }
 }
