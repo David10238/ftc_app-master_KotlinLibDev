@@ -5,5 +5,5 @@ package com.david.rechargedkotlinlibrary.internal.hardware.management
  */
 abstract class Subsystem (robot:RobotTemplate){
     protected val hMap = robot.hMap
-    abstract fun start()
+    open fun start(){}
 }

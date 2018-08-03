@@ -16,7 +16,7 @@ class CachedDcMotorEx(robot: RobotTemplate, config: String, direction:DcMotorSim
         this.zeroPowerBehavior = zeroPowerBehavior
     }
 
-    private var powerCache = -1111.0
+    private var powerCache:Double = 0.0
     override fun getVersion(): Int = delegate.version
     override fun getMode(): DcMotor.RunMode = delegate.mode
     override fun setMotorType(motorType: MotorConfigurationType?) {

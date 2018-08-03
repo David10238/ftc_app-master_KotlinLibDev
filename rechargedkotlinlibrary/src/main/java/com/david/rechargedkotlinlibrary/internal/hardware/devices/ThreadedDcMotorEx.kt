@@ -41,9 +41,6 @@ open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBeha
         delagate.direction = direction
     }
 
-    override fun start() {
-    }
-
     override fun update() {
         rawPosition = delagate.currentPosition
 
