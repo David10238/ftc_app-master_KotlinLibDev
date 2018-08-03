@@ -7,14 +7,22 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
  */
 
 abstract class CompetetionTele<rt:RobotTemplate>(createRobot:(RechargedLinearOpMode<rt>) -> rt) : RechargedLinearOpMode<rt>(createRobot){
-    var competetion = true
+    var practice = true
+    lateinit var c1:SmartGamepad
+    lateinit var c2:SmartGamepad
     override fun runOpMode() {
         handleFlow(true)
     }
 
     override fun run() {
+        onStart()
+        loopWhile({practice || runtime.seconds() < 120.0}, {
+            c1 = SmartGamepad(gamepad1)
+            c2 = SmartGamepad(gamepad2)
+            onLoop()
+        })
     }
 
-    abstract fun onStart()
+    open fun onStart(){}
     abstract fun onLoop()
 }

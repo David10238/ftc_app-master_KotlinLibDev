@@ -31,4 +31,13 @@ abstract class RechargedLinearOpMode<rt:RobotTemplate>(private val createRobot:(
     }
 
     abstract fun run()
+
+    fun loop(action:() -> Unit) {
+        loopWhile({true}, action)
+    }
+
+    fun loopWhile(condition:() -> Boolean, action:() -> Unit){
+        while(condition().and(opModeIsActive()))
+            action()
+    }
 }
