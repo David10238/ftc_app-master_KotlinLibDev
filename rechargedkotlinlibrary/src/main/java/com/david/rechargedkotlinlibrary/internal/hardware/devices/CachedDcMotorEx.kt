@@ -9,8 +9,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
  * Created by David Lukens on 8/3/2018.
  */
 
-class CachedDcMotorEx(robot: RobotTemplate, config: String) : DcMotorEx {
+class CachedDcMotorEx(robot: RobotTemplate, config: String, direction:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD, zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE) : DcMotorEx {
     private val delegate = robot.hMap.get(DcMotorEx::class.java, config)
+    init {
+        this.direction = direction
+        this.zeroPowerBehavior = zeroPowerBehavior
+    }
+
     private var powerCache = -1111.0
     override fun getVersion(): Int = delegate.version
     override fun getMode(): DcMotor.RunMode = delegate.mode
@@ -20,7 +25,9 @@ class CachedDcMotorEx(robot: RobotTemplate, config: String) : DcMotorEx {
 
     override fun getPower(): Double = if (Math.abs(power) > 1.0) 0.0 else power
     override fun setPower(power: Double) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(power != powerCache)
+            delegate.power = power
+        powerCache = power
     }
 
     override fun resetDeviceConfigurationForOpMode() = delegate.resetDeviceConfigurationForOpMode()
