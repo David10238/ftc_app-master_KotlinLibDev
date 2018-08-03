@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 /**
  * Created by David Lukens on 8/2/2018.
  */
-abstract class RobotTemplate (val opMode:RechargedLinearOpMode<RobotTemplate>){
+abstract class RobotTemplate (val opMode:RechargedLinearOpMode<out RobotTemplate>){
     val sameThreadSubsystems = HashSet<SameThreadSubsystem>()
-    val thread = HardwareThread(this)
+    private val thread = HardwareThread(this)
 
     val hMap:HardwareMap
     init {
-        init()
         hMap = opMode.hardwareMap
+        init()
     }
 
     open fun init(){}
