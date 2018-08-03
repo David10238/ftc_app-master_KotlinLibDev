@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 /**
  * Created by David Lukens on 8/2/2018.
  */
-open class CachingDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBehavior: DcMotor.ZeroPowerBehavior? = DcMotor.ZeroPowerBehavior.BRAKE, runMode: DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER, direction: DcMotorSimple.Direction? = DcMotorSimple.Direction.FORWARD) : ThreadedSubsystem(robot), DcMotorEx {
-    private val delagate = robot.hMap.get(DcMotorEx::class.java, config)
+open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBehavior: DcMotor.ZeroPowerBehavior? = DcMotor.ZeroPowerBehavior.BRAKE, runMode: DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER, direction: DcMotorSimple.Direction? = DcMotorSimple.Direction.FORWARD) : ThreadedSubsystem(robot), DcMotorEx {
+    private val delagate = hMap.get(DcMotorEx::class.java, config)
     private val ticksPerRev = delagate.motorType.ticksPerRev
     private val controller = delagate.controller
     private val deviceName = delagate.deviceName
@@ -68,6 +68,11 @@ open class CachingDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBehav
         if (dc != lastDirectionCache)
             delagate.direction = dc
         lastDirectionCache = dc
+
+        val mc = runModeCache
+        if(mc != lastRunModeChache)
+            delagate.mode = mc
+        lastRunModeChache = mc
     }
 
     override fun setMotorType(motorType: MotorConfigurationType?) {
