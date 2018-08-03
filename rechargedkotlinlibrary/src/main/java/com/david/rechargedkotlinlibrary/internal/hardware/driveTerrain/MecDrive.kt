@@ -1,6 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain
 
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachingDcMotor
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachingDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.SameThreadSubsystem
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -12,10 +12,10 @@ import kotlin.math.abs
  * Created by David Lukens on 8/2/2018.
  */
 open class MecDrive(robot: RobotTemplate, lfConfig:String, lbConfig:String, rfConfig:String, rbConfig:String, runMode:DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER, zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE, lfDirection:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD, lbDirection:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD, rfDirection:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD, rbDirection:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD) : SameThreadSubsystem(robot){
-    private val lf = CachingDcMotor(robot, lfConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = lfDirection)
-    private val lb = CachingDcMotor(robot, lbConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = lbDirection)
-    private val rf = CachingDcMotor(robot, rfConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = rfDirection)
-    private val rb = CachingDcMotor(robot, rbConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = rbDirection)
+    private val lf = CachingDcMotorEx(robot, lfConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = lfDirection)
+    private val lb = CachingDcMotorEx(robot, lbConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = lbDirection)
+    private val rf = CachingDcMotorEx(robot, rfConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = rfDirection)
+    private val rb = CachingDcMotorEx(robot, rbConfig, runMode = runMode, zeroPowerBehavior = zeroPowerBehavior, direction = rbDirection)
 
     override fun start(){
     }
