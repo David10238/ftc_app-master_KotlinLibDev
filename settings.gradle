@@ -1,2 +1,2 @@
-include ':FtcRobotController', ':rechargedkotlinlibrary'
+include ':FtcRobotController', ':rechargedkotlinlibrary', ':robotLib', ':FTCDashboard'
 include ':TeamCode'

@@ -1,6 +1,7 @@
 package com.david.rechargedkotlinlibrary.external.examples
 
 import com.david.rechargedkotlinlibrary.internal.opMode.CompetetionTele
+import com.jdroids.robotlib.gamepad.EnhancedGamepad
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 /**
@@ -11,7 +12,5 @@ class MecTele : CompetetionTele<MecBot>({opMode -> MecBot(opMode)}) {
     companion object {
         const val NAME = "MecTele"
     }
-    override fun onLoop() {
-        robot.drive.powerTranslation((c1.ly + c1.ry) / 2, c1.rt - c1.lt, (c1.ly - c1.ry) / 2)
-    }
+    override fun onLoop() = robot.drive.powerTranslation((c1.ly + c1.ry) / 2, c1.rt - c1.lt,(c1.ly - c1.ry) / 2)
 }

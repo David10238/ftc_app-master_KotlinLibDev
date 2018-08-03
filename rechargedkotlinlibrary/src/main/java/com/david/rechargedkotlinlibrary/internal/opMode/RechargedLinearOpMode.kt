@@ -16,6 +16,7 @@ abstract class RechargedLinearOpMode<rt:RobotTemplate>(private val createRobot:(
 
     val runtime:ElapsedTime = ElapsedTime()
 
+    @Throws(InterruptedException::class)
     fun handleFlow(autonomous:Boolean){
         this.autonomous = autonomous
         robot = createRobot(this)
@@ -30,6 +31,7 @@ abstract class RechargedLinearOpMode<rt:RobotTemplate>(private val createRobot:(
         run()
     }
 
+    @Throws(InterruptedException::class)
     abstract fun run()
 
     fun loop(action:() -> Unit) {
