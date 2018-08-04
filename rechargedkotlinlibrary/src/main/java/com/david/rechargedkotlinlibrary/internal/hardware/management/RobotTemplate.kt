@@ -8,14 +8,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap
  */
 abstract class RobotTemplate (val opMode:RechargedLinearOpMode<out RobotTemplate>){
     val sameThreadSubsystems = HashSet<SameThreadSubsystem>()
-    private val thread = HardwareThread(this)
-
-    val hMap:HardwareMap
+    val thread = HardwareThread(opMode)
+    val hMap:HardwareMap = opMode.hardwareMap
     init {
-        hMap = opMode.hardwareMap
         init()
     }
-
     open fun init(){}
     open fun onStart(){}
     abstract fun autoPostInit()

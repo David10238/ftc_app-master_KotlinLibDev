@@ -12,5 +12,11 @@ class MecTele : CompetetionTele<MecBot>({opMode -> MecBot(opMode)}) {
     companion object {
         const val NAME = "MecTele"
     }
-    override fun onLoop() = robot.drive.powerTranslation((c1.ly + c1.ry) / 2, c1.rt - c1.lt,(c1.ly - c1.ry) / 2)
+    override fun onLoop() {
+        robot.drive.powerTranslation((c1.ly + c1.ry) / 2, c1.rt - c1.lt, (c1.ly - c1.ry) / 2)
+        telemetry.addData("ly", c1.ly)
+        telemetry.addData("ry", c1.ry)
+        telemetry.addData("lt", c1.lt)
+        telemetry.addData("rt", c1.rt)
+    }
 }

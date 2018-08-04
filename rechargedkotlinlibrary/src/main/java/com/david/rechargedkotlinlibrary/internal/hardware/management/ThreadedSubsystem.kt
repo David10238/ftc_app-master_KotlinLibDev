@@ -6,6 +6,7 @@ package com.david.rechargedkotlinlibrary.internal.hardware.management
 
 abstract class ThreadedSubsystem(robot:RobotTemplate):Subsystem(robot){
     init {
+        robot.thread.addSubsystem(this)
     }
     abstract fun update()
 }

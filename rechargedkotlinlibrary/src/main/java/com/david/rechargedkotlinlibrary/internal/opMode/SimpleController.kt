@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.Gamepad
  */
 
 class SimpleController(c: Gamepad) {
-    val ly = c.left_stick_y.toDouble()
+    val ly = -c.left_stick_y.toDouble()
     val lx = c.left_stick_x.toDouble()
     val lt = c.left_trigger.toDouble()
-    val ry = c.right_stick_y.toDouble()
+    val ry = -c.right_stick_y.toDouble()
     val rx = c.right_stick_x.toDouble()
     val rt = c.right_trigger.toDouble()
 

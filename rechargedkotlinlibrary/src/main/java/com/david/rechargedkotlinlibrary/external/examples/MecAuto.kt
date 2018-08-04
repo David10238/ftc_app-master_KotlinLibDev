@@ -1,10 +1,12 @@
 package com.david.rechargedkotlinlibrary.external.examples
 
 import com.david.rechargedkotlinlibrary.internal.opMode.RedAuto
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 
 /**
  * Created by David Lukens on 8/3/2018.
  */
+@Autonomous(name = "MecAuto")
 class MecAuto : RedAuto<MecBot>({opMode -> MecBot(opMode) }){
     @Throws(InterruptedException::class)
     override fun run(){
