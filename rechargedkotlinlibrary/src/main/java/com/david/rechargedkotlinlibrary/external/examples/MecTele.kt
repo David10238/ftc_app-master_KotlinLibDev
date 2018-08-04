@@ -1,7 +1,6 @@
 package com.david.rechargedkotlinlibrary.external.examples
 
 import com.david.rechargedkotlinlibrary.internal.opMode.CompetetionTele
-import com.jdroids.robotlib.gamepad.EnhancedGamepad
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 /**
