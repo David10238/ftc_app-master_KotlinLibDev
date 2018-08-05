@@ -12,7 +12,7 @@ abstract class CompetetionTele<rt:RobotTemplate>(createRobot:(RechargedLinearOpM
     lateinit var c2:SimpleController
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        handleFlow(true)
+        handleFlow(false)
     }
 
     @Throws(InterruptedException::class)
