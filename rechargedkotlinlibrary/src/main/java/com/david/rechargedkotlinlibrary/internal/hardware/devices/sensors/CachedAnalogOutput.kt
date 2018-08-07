@@ -6,23 +6,25 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
  * Created by David Lukens on 8/3/2018.
  */
 
-class CachedAnalogOutput(robot:RobotTemplate, config:String){
+class CachedAnalogOutput(robot: RobotTemplate, config: String) {
     private val delegate = robot.hMap.analogOutput.get(config)
-    private var m:Byte = 0
-    private var f:Int = 0
-    private var v:Int = 0
-    fun setMode(mode:Byte){
-        if(mode != m)
+    private var m: Byte = 0
+    private var f: Int = 0
+    private var v: Int = 0
+    fun setMode(mode: Byte) {
+        if (mode != m)
             delegate.setAnalogOutputMode(mode)
         m = mode
     }
-    fun setFreq(freq:Int){
-        if(freq != f)
+
+    fun setFreq(freq: Int) {
+        if (freq != f)
             delegate.setAnalogOutputFrequency(freq)
         f = freq
     }
-    fun setVoltage(voltage:Int){
-        if(voltage != v)
+
+    fun setVoltage(voltage: Int) {
+        if (voltage != v)
             delegate.setAnalogOutputVoltage(voltage)
         v = voltage
     }

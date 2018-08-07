@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareDevice
 /**
  * Created by David Lukens on 8/3/2018.
  */
-class ThreadedDigitalChannel(robot:RobotTemplate, config:String) :ThreadedSubsystem(robot), DigitalChannel{
+class ThreadedDigitalChannel(robot: RobotTemplate, config: String) : ThreadedSubsystem(robot), DigitalChannel {
     private var delegate = hMap.get(DigitalChannel::class.java, config)
 
     private var rState = false
@@ -18,9 +18,9 @@ class ThreadedDigitalChannel(robot:RobotTemplate, config:String) :ThreadedSubsys
     private var modeCache = DigitalChannel.Mode.INPUT
     private var lastModeCache = DigitalChannel.Mode.INPUT
 
-    private var frozenRead:Boolean = false
-    fun getFrozenRead():Boolean = frozenRead
-    fun setFrozenRead(value: Boolean){
+    private var frozenRead: Boolean = false
+    fun getFrozenRead(): Boolean = frozenRead
+    fun setFrozenRead(value: Boolean) {
         frozenRead = value
     }
 
@@ -34,16 +34,16 @@ class ThreadedDigitalChannel(robot:RobotTemplate, config:String) :ThreadedSubsys
 
     override fun update() {
         val mc = modeCache
-        if(mc != lastModeCache)
+        if (mc != lastModeCache)
             delegate.mode = mc
         lastModeCache = mc
 
-        if(mc == DigitalChannel.Mode.INPUT){
-            if(!frozenRead)
+        if (mc == DigitalChannel.Mode.INPUT) {
+            if (!frozenRead)
                 rState = delegate.state
-        }else{
+        } else {
             val sc = stateCache
-            if(sc != lastStateCache)
+            if (sc != lastStateCache)
                 delegate.state = sc
             lastStateCache = sc
         }
@@ -52,19 +52,21 @@ class ThreadedDigitalChannel(robot:RobotTemplate, config:String) :ThreadedSubsys
     override fun setState(state: Boolean) {
         stateCache = state
     }
+
     override fun setMode(mode: DigitalChannel.Mode?) {
-        when(mode) {
+        when (mode) {
             DigitalChannel.Mode.INPUT -> modeCache = DigitalChannel.Mode.INPUT
             DigitalChannel.Mode.OUTPUT -> modeCache = DigitalChannel.Mode.OUTPUT
         }
     }
 
     override fun setMode(mode: DigitalChannelController.Mode?) {
-        when(mode){
+        when (mode) {
             DigitalChannelController.Mode.INPUT -> modeCache = DigitalChannel.Mode.INPUT
             DigitalChannelController.Mode.OUTPUT -> modeCache = DigitalChannel.Mode.OUTPUT
         }
     }
+
     override fun getMode(): DigitalChannel.Mode = modeCache
     override fun getState(): Boolean = rState
 

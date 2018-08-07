@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
  * Created by David Lukens on 8/3/2018.
  */
 @Autonomous(name = "MecAuto")
-class MecAuto : RedAuto<MecBot>({opMode -> MecBot(opMode) }){
+class MecAuto : RedAuto<MecBot>({ opMode -> MecBot(opMode) }) {
     @Throws(InterruptedException::class)
-    override fun run(){
+    override fun run() {
         robot.drive.powerTranslation(0.5, 0.0, 0.0)
         sleep(2500)
         robot.drive.powerTranslation(0.0, 0.0, 0.0)

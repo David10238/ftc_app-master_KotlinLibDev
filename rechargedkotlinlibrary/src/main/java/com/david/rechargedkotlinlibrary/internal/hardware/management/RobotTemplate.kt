@@ -11,15 +11,15 @@ import java.util.*
 abstract class RobotTemplate(val opMode: RechargedLinearOpMode<out RobotTemplate>, revHubNames: Array<String>) {
     val hMap: HardwareMap = opMode.hardwareMap
     val sameThreadSubsystems = HashSet<SameThreadSubsystem>()
-    val thread = HardwareThread(opMode)
+    val thread = HardwareThread(this)
 
-    private val revHubs = LinkedList<RevHub>()
+    val revHubs = LinkedList<RevHub>()
 
     init {
         revHubNames.forEach { revHubs.addLast(RevHub(this, it)) }
     }
 
-    fun getHub(index:Int) = revHubs[index]
+    fun getHub(index: Int) = revHubs[index]
 
     open fun onStart() {}
     abstract fun autoPostInit()

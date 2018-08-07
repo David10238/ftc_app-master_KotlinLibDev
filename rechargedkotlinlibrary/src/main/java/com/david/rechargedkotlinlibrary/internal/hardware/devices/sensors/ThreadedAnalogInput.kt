@@ -16,7 +16,7 @@ class ThreadedAnalogInput(robot: RobotTemplate, config: String) : ThreadedSubsys
 
     private var frozenRead = false
     fun getFrozenRead() = frozenRead
-    fun setFrozenRead(value:Boolean){
+    fun setFrozenRead(value: Boolean) {
         frozenRead = value
     }
 
@@ -24,10 +24,10 @@ class ThreadedAnalogInput(robot: RobotTemplate, config: String) : ThreadedSubsys
     }
 
     override fun update() {
-        if(!frozenRead)
+        if (!frozenRead)
             v = delegate.voltage
     }
 
     override fun readRawVoltage(): Double = v
-    fun getMaxVoltage():Double = maxV
+    fun getMaxVoltage(): Double = maxV
 }

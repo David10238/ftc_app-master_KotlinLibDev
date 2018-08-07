@@ -6,10 +6,10 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
  * Created by David Lukens on 8/2/2018.
  */
 
-abstract class CompetetionTele<rt:RobotTemplate>(createRobot:(RechargedLinearOpMode<rt>) -> rt) : RechargedLinearOpMode<rt>(createRobot){
+abstract class CompetetionTele<rt : RobotTemplate>(createRobot: (RechargedLinearOpMode<rt>) -> rt) : RechargedLinearOpMode<rt>(createRobot) {
     var practice = true
-    lateinit var c1:SimpleController
-    lateinit var c2:SimpleController
+    lateinit var c1: SimpleController
+    lateinit var c2: SimpleController
     @Throws(InterruptedException::class)
     override fun runOpMode() {
         handleFlow(false)
@@ -18,7 +18,7 @@ abstract class CompetetionTele<rt:RobotTemplate>(createRobot:(RechargedLinearOpM
     @Throws(InterruptedException::class)
     override fun run() {
         onStart()
-        loopWhile({practice || runtime.seconds() < 120.0}, {
+        loopWhile({ practice || runtime.seconds() < 120.0 }, {
             c1 = SimpleController(gamepad1)
             c2 = SimpleController(gamepad2)
             onLoop()
@@ -27,7 +27,9 @@ abstract class CompetetionTele<rt:RobotTemplate>(createRobot:(RechargedLinearOpM
     }
 
     @Throws(InterruptedException::class)
-    open fun onStart(){}
+    open fun onStart() {
+    }
+
     @Throws(InterruptedException::class)
     abstract fun onLoop()
 }

@@ -10,21 +10,24 @@ import com.qualcomm.robotcore.util.Range
  * Created by David Lukens on 8/3/2018.
  */
 
-class CachedServo(robot:RobotTemplate, config:String, var overrideCache:Boolean = false, min:Double = 0.0, max:Double = 1.0, direction: Servo.Direction? = Servo.Direction.FORWARD): Servo{
+class CachedServo(robot: RobotTemplate, config: String, var overrideCache: Boolean = false, min: Double = 0.0, max: Double = 1.0, direction: Servo.Direction? = Servo.Direction.FORWARD) : Servo {
     private val delegate = robot.hMap.servo.get(config)
-    private var cachedPosition:Double = min-1.0
+    private var cachedPosition: Double = min - 1.0
     private var min = min
     private var max = max
+
     init {
         scaleRange(min, max)
         setDirection(direction)
     }
+
     override fun setPosition(position: Double) {
         cachedPosition = Range.clip(position, min, max)
         if (position.equals(cachedPosition).not().or(overrideCache))
             delegate.position = position
         cachedPosition = position
     }
+
     override fun getPosition(): Double = cachedPosition
     override fun scaleRange(min: Double, max: Double) {
         this.min = min
