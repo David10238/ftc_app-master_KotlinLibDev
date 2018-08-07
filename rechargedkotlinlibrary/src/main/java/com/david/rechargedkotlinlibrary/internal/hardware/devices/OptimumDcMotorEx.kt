@@ -20,6 +20,7 @@ class OptimumDcMotorEx(robot: RobotTemplate, config: String, hub: Int) : DcMotor
     fun ticksToRadians(ticks: Int) = ticks / TICKS_PER_REV * 2 * Math.PI
     fun getRawRadians() = ticksToRadians(getRawPosition())
     fun getRawPosition() = HUB.getEncoder(PORT)
+    fun getRadians() = ticksToRadians(currentPosition)
     override fun getCurrentPosition() = getRawPosition() - resetPos
     fun resetEncoder() {
         resetPos = getRawPosition()
