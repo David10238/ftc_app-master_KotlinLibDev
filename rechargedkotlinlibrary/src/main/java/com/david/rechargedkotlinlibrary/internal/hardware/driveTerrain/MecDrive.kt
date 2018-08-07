@@ -1,5 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain
 
+import com.acmerobotics.roadrunner.drive.MecanumDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.SameThreadSubsystem
@@ -10,20 +11,20 @@ import kotlin.math.abs
 /**
  * Created by David Lukens on 8/2/2018.
  */
-open class MecDrive(robot: RobotTemplate, private val lf: OptimumDcMotorEx, private val lb: OptimumDcMotorEx, private val rf: OptimumDcMotorEx, private val rb: OptimumDcMotorEx, val RUN_MODE: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER, val RADIUS: Double = 2.0, val BASE_WIDTH: Double) : SameThreadSubsystem(robot) {
-    fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = powerMotors(lfp = forward + strafeRight + turnClockwise, lbp = forward - strafeRight + turnClockwise, rfp = forward - strafeRight - turnClockwise, rbp = forward + strafeRight - turnClockwise)
+open class MecDrive(robot: RobotTemplate, private val lf: OptimumDcMotorEx, private val lb: OptimumDcMotorEx, private val rf: OptimumDcMotorEx, private val rb: OptimumDcMotorEx, val RUN_MODE: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER, val RADIUS: Double = 2.0, TRACK_WIDTH: Double): MecanumDrive(TRACK_WIDTH){
+    fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward - strafeRight - turnClockwise, forward + strafeRight - turnClockwise)
 
-    fun powerMotors(lfp: Double, lbp: Double, rfp: Double, rbp: Double) {
-        val max = Collections.max(listOf(abs(lfp), abs(lbp), abs(rfp), abs(rbp), 1.0))
-        lf.power = lfp / max
-        lb.power = lbp / max
-        rf.power = rfp / max
-        rb.power = rbp / max
+    override fun setMotorPowers(frontLeft: Double, rearLeft: Double, rearRight: Double, frontRight: Double) {
+        val max = Collections.max(listOf(abs(frontLeft), abs(rearLeft), abs(frontRight), abs(rearRight), 1.0))
+        lf.power = frontLeft / max
+        lb.power = rearLeft / max
+        rf.power = frontRight / max
+        rb.power = rearRight / max
     }
 
     fun radiansToInches(radians: Double) = radians * RADIUS
 
-    fun getWheelPositions(): List<Double> {
+    override fun getWheelPositions(): List<Double> {
         val positions = LinkedList<Double>()
         positions.add(radiansToInches(lf.getRadians()))
         positions.add(radiansToInches(lb.getRadians()))

@@ -38,7 +38,9 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    jcenter()
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -46,4 +48,5 @@ dependencies {
     compile(name: 'RobotCore-release', ext: 'aar')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.acmerobotics.roadrunner:core:0.1-SNAPSHOT'
 }

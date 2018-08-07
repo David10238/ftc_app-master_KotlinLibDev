@@ -1,5 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices
 
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.ThreadedSubsystem
 import com.qualcomm.robotcore.hardware.*
@@ -9,10 +10,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 /**
  * Created by David Lukens on 8/7/2018.
  */
-class OptimumDcMotorEx(robot: RobotTemplate, config: String, hub: Int) : DcMotorEx, ThreadedSubsystem(robot) {
-    val delegate = robot.hMap.get(DcMotorEx::class.java, config)
+class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(configData.robot) {
+    val delegate = hMap.get(DcMotorEx::class.java, configData.config)
     val PORT = delegate.portNumber
-    val HUB = robot.getHub(hub)
+    val HUB = configData.robot.getHub(configData.hub)
     private val MOTOR_TYPE = delegate.motorType
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
     var resetPos = 0

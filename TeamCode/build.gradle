@@ -11,9 +11,17 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply plugin: 'kotlin-android'
+
+repositories {
+    // other repositories
+    jcenter()
+    mavenLocal()
+}
+
 dependencies {
     implementation project(':rechargedkotlinlibrary')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.acmerobotics.roadrunner:core:0.1-SNAPSHOT'
 }
 android {
     buildToolsVersion '27.0.3'
