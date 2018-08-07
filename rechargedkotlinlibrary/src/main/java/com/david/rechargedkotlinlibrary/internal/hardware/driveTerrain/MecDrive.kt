@@ -14,9 +14,7 @@ import kotlin.math.abs
 /**
  * Created by David Lukens on 8/2/2018.
  */
-open class MecDrive(robot: RobotTemplate, private val lf:DcMotorEx, private val lb:DcMotorEx, private val rf:DcMotorEx, private val rb:DcMotorEx, val MOTOR_TYPE:MotorType) : SameThreadSubsystem(robot){
-    var TICKS_PER_REVOLUTION = MOTOR_TYPE.ticksPerRev
-
+open class MecDrive(robot: RobotTemplate, private val lf:ThreadedDcMotorEx, private val lb:ThreadedDcMotorEx, private val rf:ThreadedDcMotorEx, private val rb:ThreadedDcMotorEx, val RUN_MODE:DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER, val RADIUS:Double = 2.0, val BASE_WIDTH:Double) : SameThreadSubsystem(robot){
     fun powerTranslation(forward:Double, strafeRight:Double, turnClockwise:Double) = powerMotors(lfp = forward + strafeRight + turnClockwise, lbp = forward - strafeRight + turnClockwise, rfp = forward - strafeRight - turnClockwise, rbp = forward + strafeRight - turnClockwise)
 
     fun powerMotors(lfp:Double, lbp:Double, rfp:Double, rbp:Double){
@@ -25,5 +23,16 @@ open class MecDrive(robot: RobotTemplate, private val lf:DcMotorEx, private val 
         lb.power = lbp / max
         rf.power = rfp / max
         rb.power = rbp / max
+    }
+
+    fun radiansToInches(radians:Double) = radians * RADIUS
+
+    fun getWheelPositions():List<Double>{
+        val positions = LinkedList<Double>()
+        positions.add(radiansToInches(lf.getRadians()))
+        positions.add(radiansToInches(lb.getRadians()))
+        positions.add(radiansToInches(rf.getRadians()))
+        positions.add(radiansToInches(rb.getRadians()))
+        return positions
     }
 }

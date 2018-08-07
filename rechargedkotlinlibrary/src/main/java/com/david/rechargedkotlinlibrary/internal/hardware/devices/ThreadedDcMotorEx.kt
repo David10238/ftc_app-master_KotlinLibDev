@@ -9,11 +9,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 /**
  * Created by David Lukens on 8/2/2018.
  */
-open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBehavior: DcMotor.ZeroPowerBehavior? = DcMotor.ZeroPowerBehavior.BRAKE, runMode: DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER, direction: DcMotorSimple.Direction? = DcMotorSimple.Direction.FORWARD) : ThreadedSubsystem(robot), DcMotorEx {
-    private val delagate = hMap.get(DcMotorEx::class.java, config)
-    private val ticksPerRev = delagate.motorType.ticksPerRev
-    private val controller = delagate.controller
-    private val deviceName = delagate.deviceName
+open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBehavior: DcMotor.ZeroPowerBehavior? = DcMotor.ZeroPowerBehavior.BRAKE, runMode: DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER, direction: DcMotorSimple.Direction? = DcMotorSimple.Direction.FORWARD, hub:Int) : ThreadedSubsystem(robot), DcMotorEx {
+    private val delegate = hMap.get(DcMotorEx::class.java, config)
+    private val TICKS_PER_REV = delegate.motorType.ticksPerRev
+    private val controller = delegate.controller
+    private val deviceName = delegate.deviceName
     private var resetPos = 0
     private var lastResetPos = 0
     private var rawPosition = 0
@@ -22,61 +22,64 @@ open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBeha
     private var targetPosCache = 0
     private var lastTargetPosCache = 0
     private var zeroPowerBehaviorCache = zeroPowerBehavior
-    private var connectionInfo = delagate.connectionInfo
-    private val version = delagate.version
+    private var connectionInfo = delegate.connectionInfo
+    private val version = delegate.version
 
     private var runModeCache = runMode
     private var lastRunModeChache: DcMotor.RunMode = runMode
-    private val portNumber = delagate.portNumber
+    private val portNumber = delegate.portNumber
     private var powerCache = 0.0
     private var lastPowerCache = 0.0
-    private val manufacturer = delagate.manufacturer
-    private val motorType = delagate.motorType
+    private val manufacturer = delegate.manufacturer
+    private val motorType = delegate.motorType
 
     private var directionCache = direction
     private var lastDirectionCache = direction
 
+    private val PORT = delegate.portNumber
+    private val HUB = robot.getHub(hub)
+
     init {
-        delagate.mode = runMode
-        delagate.direction = direction
+        delegate.mode = runMode
+        delegate.direction = direction
     }
 
     override fun update() {
-        rawPosition = delagate.currentPosition
+        rawPosition = HUB.getEncoder(PORT)
 
         val rPos = resetPos
         val tpCache = targetPosCache
         if (tpCache != lastTargetPosCache || rPos != lastResetPos)
-            delagate.targetPosition = tpCache
+            delegate.targetPosition = tpCache
         lastTargetPosCache = tpCache
         lastResetPos = rPos
 
         val zpbc = zeroPowerBehaviorCache
         if (zpbc != lastZeroPowerBehaviorCache)
-            delagate.zeroPowerBehavior = zpbc
+            delegate.zeroPowerBehavior = zpbc
         lastZeroPowerBehaviorCache = zpbc
 
         val pc = powerCache
         if (pc != lastPowerCache)
-            delagate.power = pc
+            delegate.power = pc
         lastPowerCache = pc
 
         val dc = directionCache
         if (dc != lastDirectionCache)
-            delagate.direction = dc
+            delegate.direction = dc
         lastDirectionCache = dc
 
         val mc = runModeCache
         if(mc != lastRunModeChache)
-            delagate.mode = mc
+            delegate.mode = mc
         lastRunModeChache = mc
     }
 
     override fun setMotorType(motorType: MotorConfigurationType?) {
-        delagate.motorType = motorType
+        delegate.motorType = motorType
     }
 
-    override fun resetDeviceConfigurationForOpMode() = delagate.resetDeviceConfigurationForOpMode()
+    override fun resetDeviceConfigurationForOpMode() = delegate.resetDeviceConfigurationForOpMode()
 
     override fun getController(): DcMotorController = controller
 
@@ -84,7 +87,13 @@ open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBeha
 
     override fun getCurrentPosition(): Int = currentPosition - resetPos
 
-    fun getRawPosition(): Int = rawPosition
+    fun getRawPosition() = rawPosition
+
+    fun getRawRadians() = ticksToRadians(getRawPosition())
+
+    fun getRadians() = ticksToRadians(currentPosition)
+
+    fun ticksToRadians(ticks:Int):Double = 2.0 * Math.PI * ticks / TICKS_PER_REV
 
     fun resetEncoder() {
         resetPos = getRawPosition()
@@ -123,10 +132,10 @@ open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBeha
         }
     }
 
-    override fun isBusy(): Boolean = delagate.isBusy
+    override fun isBusy(): Boolean = delegate.isBusy
 
     override fun getPortNumber(): Int = portNumber
-    override fun close() = delagate.close()
+    override fun close() = delegate.close()
     override fun setPowerFloat() {
         zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
     }
@@ -155,25 +164,25 @@ open class ThreadedDcMotorEx(robot: RobotTemplate, config: String, zeroPowerBeha
         return DcMotorSimple.Direction.FORWARD
     }
 
-    override fun getPIDCoefficients(mode: DcMotor.RunMode?): PIDCoefficients = delagate.getPIDCoefficients(mode)
+    override fun getPIDCoefficients(mode: DcMotor.RunMode?): PIDCoefficients = delegate.getPIDCoefficients(mode)
 
     override fun setPIDCoefficients(mode: DcMotor.RunMode?, pidCoefficients: PIDCoefficients?) {
-        delagate.setPIDCoefficients(mode, pidCoefficients)
+        delegate.setPIDCoefficients(mode, pidCoefficients)
     }
 
-    override fun setMotorDisable() = delagate.setMotorDisable()
+    override fun setMotorDisable() = delegate.setMotorDisable()
 
-    override fun setVelocity(angularRate: Double, unit: AngleUnit?) = delagate.setVelocity(angularRate, unit)
+    override fun setVelocity(angularRate: Double, unit: AngleUnit?) = delegate.setVelocity(angularRate, unit)
 
-    override fun isMotorEnabled(): Boolean = delagate.isMotorEnabled
+    override fun isMotorEnabled(): Boolean = delegate.isMotorEnabled
 
-    override fun setMotorEnable() = delagate.setMotorEnable()
+    override fun setMotorEnable() = delegate.setMotorEnable()
 
-    override fun getTargetPositionTolerance(): Int = delagate.targetPositionTolerance
+    override fun getTargetPositionTolerance(): Int = delegate.targetPositionTolerance
 
-    override fun getVelocity(unit: AngleUnit?): Double = delagate.getVelocity(unit)
+    override fun getVelocity(unit: AngleUnit?): Double = delegate.getVelocity(unit)
 
     override fun setTargetPositionTolerance(tolerance: Int) {
-        delagate.targetPositionTolerance = tolerance
+        delegate.targetPositionTolerance = tolerance
     }
 }
