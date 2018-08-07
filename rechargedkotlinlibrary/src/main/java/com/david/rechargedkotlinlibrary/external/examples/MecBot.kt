@@ -11,6 +11,5 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
  */
 
 class MecBot(opMode: RechargedLinearOpMode<MecBot>):RobotTemplate(opMode){
-    val drive = MecDrive(robot = this, lfConfig = "lf", lbConfig = "lb", rfConfig = "rf", rbConfig = "rb", lfDirection = DcMotorSimple.Direction.REVERSE, lbDirection = DcMotorSimple.Direction.REVERSE)
     override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, MecTele.NAME)
 }
