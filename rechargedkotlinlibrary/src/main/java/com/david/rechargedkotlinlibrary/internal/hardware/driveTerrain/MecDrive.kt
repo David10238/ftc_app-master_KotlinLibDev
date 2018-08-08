@@ -33,10 +33,38 @@ open class MecDrive(private val lf: OptimumDcMotorEx, private val lb: OptimumDcM
 
     override fun getWheelPositions(): List<Double> {
         val positions = LinkedList<Double>()
-        positions.add(radiansToInches(lf.getRadians()))
-        positions.add(radiansToInches(lb.getRadians()))
-        positions.add(radiansToInches(rf.getRadians()))
-        positions.add(radiansToInches(rb.getRadians()))
+        positions.add(radiansToInches(lfRawRadians()))
+        positions.add(radiansToInches(lbRawRadians()))
+        positions.add(radiansToInches(rfRawRadians()))
+        positions.add(radiansToInches(rbRawRadians()))
         return positions
     }
+
+    fun resetEncoders() {
+        resetLFEncoder()
+        resetLBEncoder()
+        resetRFEncoder()
+        resetRBEncoder()
+    }
+
+    fun resetLFEncoder() = lf.resetEncoder()
+    fun resetLBEncoder() = lb.resetEncoder()
+    fun resetRFEncoder() = rf.resetEncoder()
+    fun resetRBEncoder() = rb.resetEncoder()
+    fun lfTicks() = lf.currentPosition
+    fun lbTicks() = lb.currentPosition
+    fun rfTicks() = rf.currentPosition
+    fun rbTicks() = rb.currentPosition
+    fun lfRawTicks() = lf.getRawPosition()
+    fun lbRawTicks() = lb.getRawPosition()
+    fun rfRawTicks() = rf.getRawPosition()
+    fun rbRawTicks() = rb.getRawPosition()
+    fun lfRadians() = lf.getRadians()
+    fun lbRadians() = lb.getRadians()
+    fun rfRadians() = rf.getRadians()
+    fun rbRadians() = rb.getRadians()
+    fun lfRawRadians() = lf.getRawRadians()
+    fun lbRawRadians() = lb.getRawRadians()
+    fun rfRawRadians() = rf.getRawRadians()
+    fun rbRawRadians() = rb.getRawRadians()
 }
