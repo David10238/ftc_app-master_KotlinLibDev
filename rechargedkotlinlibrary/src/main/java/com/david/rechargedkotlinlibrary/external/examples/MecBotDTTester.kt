@@ -24,5 +24,14 @@ class MecBotDTTester : PracticeTeleOp<MecBot>({ opMode -> MecBot(opMode) }) {
             if (rb) robot.drive.resetRBEncoder()
         }
         robot.drive.setMotorPowers(if (lf) speed else 0.0, if (lb) speed else 0.0, if (rf) speed else 0.0, if (rb) speed else 0.0)
+        telemetry.addData("speed", speed)
+        telemetry.addLine("a for lf")
+        telemetry.addLine("b for lb")
+        telemetry.addLine("x for rf")
+        telemetry.addLine("y for rb")
+        telemetry.addData("lfPos", robot.drive.lfTicks())
+        telemetry.addData("lbPos", robot.drive.lbTicks())
+        telemetry.addData("rfPos", robot.drive.rfTicks())
+        telemetry.addData("rbPos", robot.drive.rbTicks())
     }
 }
