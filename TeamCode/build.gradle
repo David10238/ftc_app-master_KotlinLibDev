@@ -12,6 +12,18 @@
 apply from: '../build.common.gradle'
 apply plugin: 'kotlin-android'
 
+android {
+    defaultConfig {
+        minSdkVersion 21
+        multiDexEnabled true
+    }
+    buildToolsVersion '27.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
 repositories {
     // other repositories
     jcenter()
@@ -20,13 +32,13 @@ repositories {
 
 dependencies {
     implementation project(':rechargedkotlinlibrary')
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.acmerobotics.roadrunner:core:0.1-SNAPSHOT'
+
+    compile 'com.android.support:multidex:1.0.3'
+    //compile 'com.android.support:appcompat-v7:21.0.0'
 }
-android {
-    buildToolsVersion '27.0.3'
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
+
+

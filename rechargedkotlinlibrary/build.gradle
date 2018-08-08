@@ -4,11 +4,10 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 26
 
-
-
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 26
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
 
@@ -49,4 +48,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.acmerobotics.roadrunner:core:0.1-SNAPSHOT'
+
+    implementation 'com.android.support:multidex:1.0.3'
+    //compile 'com.android.support:appcompat-v7:26.0.0'
 }

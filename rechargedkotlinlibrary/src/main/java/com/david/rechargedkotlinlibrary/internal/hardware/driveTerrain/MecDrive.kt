@@ -11,7 +11,14 @@ import kotlin.math.abs
 /**
  * Created by David Lukens on 8/2/2018.
  */
-open class MecDrive(private val lf: OptimumDcMotorEx, private val lb: OptimumDcMotorEx, private val rf: OptimumDcMotorEx, private val rb: OptimumDcMotorEx, val RUN_MODE: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER, val RADIUS: Double = 2.0, TRACK_WIDTH: Double): MecanumDrive(TRACK_WIDTH){
+open class MecDrive(private val lf: OptimumDcMotorEx, private val lb: OptimumDcMotorEx, private val ENCODER_SCALER:Double = 1.0, private val rf: OptimumDcMotorEx, private val rb: OptimumDcMotorEx, val RUN_MODE: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER, val RADIUS: Double = 2.0, TRACK_WIDTH: Double): MecanumDrive(TRACK_WIDTH){
+    init {
+        lf.mode = RUN_MODE
+        lb.mode = RUN_MODE
+        rf.mode = RUN_MODE
+        rb.mode = RUN_MODE
+    }
+
     fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward - strafeRight - turnClockwise, forward + strafeRight - turnClockwise)
 
     override fun setMotorPowers(frontLeft: Double, rearLeft: Double, rearRight: Double, frontRight: Double) {
@@ -22,7 +29,7 @@ open class MecDrive(private val lf: OptimumDcMotorEx, private val lb: OptimumDcM
         rb.power = rearRight / max
     }
 
-    fun radiansToInches(radians: Double) = radians * RADIUS
+    fun radiansToInches(radians: Double) = radians * RADIUS * ENCODER_SCALER
 
     override fun getWheelPositions(): List<Double> {
         val positions = LinkedList<Double>()
