@@ -1,11 +1,12 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders
 
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.RevHub
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 
 /**
  * Created by David Lukens on 8/8/2018.
  */
-class E4T(robot:RobotTemplate, hub:Int, port:Int, type:E4T.Type) : Encoder(robot, hub, port, PPR = type.PPR){
+class E4T(HUB:RevHub, PORT:Int, type:E4T.Type) : Encoder(HUB, PORT, PPR = type.PPR){
     enum class Type(val CPR:Int){
         CPR100(100),
         CPR108(108),
