@@ -5,4 +5,5 @@ package com.david.rechargedkotlinlibrary.internal.util
  */
 object MathUtil {
     val TAU = 2.0 * Math.PI
+    fun radiansToInches(radians:Double, radius:Double) = TAU * radians * radius
 }
