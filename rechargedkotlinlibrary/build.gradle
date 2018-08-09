@@ -40,6 +40,9 @@ repositories {
     jcenter()
     mavenCentral()
     mavenLocal()
+    maven {
+        url  "https://dl.bintray.com/acmerobotics/maven"
+    }
 }
 
 dependencies {
@@ -47,7 +50,7 @@ dependencies {
     compile(name: 'RobotCore-release', ext: 'aar')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.acmerobotics.roadrunner:core:0.1-SNAPSHOT'
+    implementation 'com.acmerobotics.roadrunner:core:0.1.0'
 
     implementation 'com.android.support:multidex:1.0.3'
     //compile 'com.android.support:appcompat-v7:26.0.0'

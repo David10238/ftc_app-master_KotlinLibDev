@@ -1,5 +1,7 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry
 
+import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.Vector2d
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders.Encoder
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.ThreadedSubsystem
@@ -7,15 +9,11 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.ThreadedSub
 /**
  * Created by David Lukens on 8/8/2018.
  */
-class Tracking3Wheels(private val robot: RobotTemplate, private val RADIUS:Double, private val LEFT_WHEEL: Encoder, private val RIGHT_WHEEL: Encoder, private val THIRD_WHEEL: Encoder, private val PARALLEL_WHEELS_CENTER_OFFSET:Double, private val THIRD_WHEEL_CENTER_OFFSET:Double, private val TICK_SCALER:Double = 1.0) : ThreadedSubsystem(robot){
+class Tracking3Wheels(robot: RobotTemplate, private val RADIUS:Double, private val LEFT_WHEEL: Encoder, private val RIGHT_WHEEL: Encoder, private val THIRD_WHEEL: Encoder, private val PARALLEL_WHEELS_CENTER_OFFSET:Double, private val THIRD_WHEEL_CENTER_OFFSET:Double, private val TICK_SCALER:Double = 1.0, private var pos:Pose2d = Pose2d(Vector2d(0.0, 0.0), 0.0)) : ThreadedSubsystem(robot){
 
     var lastW0 = radiansToInches(LEFT_WHEEL.getRadians())
     var lastW1 = radiansToInches(RIGHT_WHEEL.getRadians())
     var lastW2 = radiansToInches(THIRD_WHEEL.getRadians())
-
-    var delta = 0.0
-    var x = 0.0
-    var y = 0.0
 
     override fun update() {
         val w0 = radiansToInches(LEFT_WHEEL.getRawRadians())
@@ -26,9 +24,9 @@ class Tracking3Wheels(private val robot: RobotTemplate, private val RADIUS:Doubl
         val e1 = w0 - lastW1
         val e2 = w0 - lastW2
 
-        x += (e0 + e1) / (2)
-        y += ((PARALLEL_WHEELS_CENTER_OFFSET * (e0 - e1)) / (2 * THIRD_WHEEL_CENTER_OFFSET)) + e2
-        delta += (e1 - e0) / (2 * THIRD_WHEEL_CENTER_OFFSET)
+        val xChange = (e0 + e1) / (2)
+        val yChange = ((PARALLEL_WHEELS_CENTER_OFFSET * (e0 - e1)) / (2 * THIRD_WHEEL_CENTER_OFFSET)) + e2
+        val deltaChange = (e1 - e0) / (2 * THIRD_WHEEL_CENTER_OFFSET)
 
 
         lastW0 = w0
@@ -37,4 +35,6 @@ class Tracking3Wheels(private val robot: RobotTemplate, private val RADIUS:Doubl
     }
 
     private fun radiansToInches(radians:Double) = radians * RADIUS * TICK_SCALER
+
+    private fun getPos() = pos
 }
