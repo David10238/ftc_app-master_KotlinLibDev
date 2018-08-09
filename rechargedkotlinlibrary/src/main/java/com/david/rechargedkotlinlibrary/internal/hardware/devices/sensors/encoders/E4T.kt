@@ -5,7 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
 /**
  * Created by David Lukens on 8/8/2018.
  */
-class E4T(robot:RobotTemplate, hub:Int, port:Int, type:E4T.Type) : Encoder(robot, hub, port, CPR = type.CPR){
+class E4T(robot:RobotTemplate, hub:Int, port:Int, type:E4T.Type) : Encoder(robot, hub, port, PPR = type.PPR){
     enum class Type(val CPR:Int){
         CPR100(100),
         CPR108(108),
@@ -19,7 +19,8 @@ class E4T(robot:RobotTemplate, hub:Int, port:Int, type:E4T.Type) : Encoder(robot
         CPR300(300),
         CPR360(360),
         CPR400(400),
-        CPR500(500),
-        CPR1120(1120);
+        CPR500(500);
+        val MAX_RPM = Math.min(60000, 6000000 / CPR)
+        val PPR = CPR * 4
     }
 }

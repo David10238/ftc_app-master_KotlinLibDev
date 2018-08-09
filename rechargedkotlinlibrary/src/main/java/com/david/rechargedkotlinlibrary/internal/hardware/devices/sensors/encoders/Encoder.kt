@@ -6,7 +6,7 @@ import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 /**
  * Created by David Lukens on 8/8/2018.
  */
-open class Encoder (robot:RobotTemplate, hub:Int, private val PORT:Int, private val CPR:Int){
+open class Encoder (robot:RobotTemplate, hub:Int, private val PORT:Int, private val PPR:Int){
     protected val HUB = robot.getHub(hub)
 
     protected var resetTicks = 0
@@ -20,6 +20,6 @@ open class Encoder (robot:RobotTemplate, hub:Int, private val PORT:Int, private 
     fun getRawRadians() = toRadians(getRawTicks())
 
     private fun toRadians(ticks:Int):Double{
-        return ticks / CPR * MathUtil.TAU
+        return ticks / PPR * MathUtil.TAU
     }
 }
