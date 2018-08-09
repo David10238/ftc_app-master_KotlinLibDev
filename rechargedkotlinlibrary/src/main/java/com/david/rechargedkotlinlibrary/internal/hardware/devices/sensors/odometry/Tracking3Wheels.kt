@@ -1,13 +1,13 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry
 
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Encoder
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders.Encoder
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.ThreadedSubsystem
 
 /**
  * Created by David Lukens on 8/8/2018.
  */
-class `3TrackingWheels`(private val robot: RobotTemplate, private val RADIUS:Double, private val LEFT_WHEEL:Encoder, private val RIGHT_WHEEL:Encoder, private val THIRD_WHEEL:Encoder, private val PARALLEL_WHEELS_CENTER_OFFSET:Double, private val THIRD_WHEEL_CENTER_OFFSET:Double, private val TICK_SCALER:Double = 1.0) : ThreadedSubsystem(robot){
+class Tracking3Wheels(private val robot: RobotTemplate, private val RADIUS:Double, private val LEFT_WHEEL: Encoder, private val RIGHT_WHEEL: Encoder, private val THIRD_WHEEL: Encoder, private val PARALLEL_WHEELS_CENTER_OFFSET:Double, private val THIRD_WHEEL_CENTER_OFFSET:Double, private val TICK_SCALER:Double = 1.0) : ThreadedSubsystem(robot){
 
     var lastW0 = radiansToInches(LEFT_WHEEL.getRadians())
     var lastW1 = radiansToInches(RIGHT_WHEEL.getRadians())

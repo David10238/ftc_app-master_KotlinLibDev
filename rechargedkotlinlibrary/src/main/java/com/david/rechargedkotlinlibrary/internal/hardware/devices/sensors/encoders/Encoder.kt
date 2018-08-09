@@ -1,4 +1,4 @@
-package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors
+package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.util.MathUtil
@@ -6,10 +6,10 @@ import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 /**
  * Created by David Lukens on 8/8/2018.
  */
-class Encoder (robot:RobotTemplate, hub:Int, private val PORT:Int, private val CPR:Int = 1120){
-    private val HUB = robot.getHub(hub)
+open class Encoder (robot:RobotTemplate, hub:Int, private val PORT:Int, private val CPR:Int){
+    protected val HUB = robot.getHub(hub)
 
-    private var resetTicks = 0
+    protected var resetTicks = 0
     fun getRawTicks() = HUB.getEncoder(PORT)
     fun reset() {
         resetTicks = getRawTicks()
