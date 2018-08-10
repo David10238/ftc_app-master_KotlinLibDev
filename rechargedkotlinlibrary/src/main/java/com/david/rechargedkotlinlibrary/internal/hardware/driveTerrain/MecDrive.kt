@@ -64,9 +64,9 @@ abstract class MecDrive(private val robot: RobotTemplate,
             action?.run()
         }
     }
-    fun waitOnTrajectory(trajectory: Trajectory, condition: () -> Boolean = {true}, runnable: Runnable? = null){
+    fun waitOnTrajectory(condition: () -> Boolean = {true}, action: Runnable? = null, trajectory: Trajectory){
         follower.followTrajectory(trajectory)
-        waitOnFollower(condition, runnable)
+        waitOnFollower(condition, action)
     }
 
     fun trajectoryBuilder(pos: Pose2d = getPos(), constraints:MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
