@@ -30,4 +30,19 @@ open class Encoder (private val HUB:RevHub, private val PORT:Int, private val PP
     fun setDirection(direction:DcMotorSimple.Direction) {
         secant = if(direction == DcMotorSimple.Direction.REVERSE) -1 else 0
     }
+
+    private var lastTicks:Int? = null
+
+    fun tickChange():Int?{
+        var ticks = getTicks()
+        var change:Int? = if(lastTicks != null) ticks - lastTicks!! else null
+        lastTicks = ticks
+        return change
+    }
+
+    fun radiansChange():Double?{
+        val change = tickChange()
+        return if(change != null) toRadians(change) else null
+    }
+
 }
