@@ -29,10 +29,14 @@ class Tracking3Wheels(
             val e0 = radiansToInches(leftChange)
             val e1 = radiansToInches(rightChange)
             val e2 = radiansToInches(backChange)
+
             val dx = (e0 + e1) / 2
             val dy = ((BACK_OFFSET * (e0 - e1)) / TRACK_WIDTH) + e2
             val dh = (e1 - e0) / TRACK_WIDTH
-            data += Pose2d(Vector2d(dx, dy), dh) // I need to turn this from robot centric to field centric
+
+            val d = Math.hypot(Math.abs(dx), Math.abs(dy))
+
+            data += Pose2d(Vector2d(d, d), dh) // I need to turn this from robot centric to field centric
         }
     }
 
