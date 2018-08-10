@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.drive.MecanumDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.SameThreadSubsystem
+import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 import com.qualcomm.robotcore.hardware.DcMotor
 import java.util.*
 import kotlin.math.abs
@@ -11,12 +12,26 @@ import kotlin.math.abs
 /**
  * Created by David Lukens on 8/2/2018.
  */
-open class MecDrive(private val lf: OptimumDcMotorEx, private val lb: OptimumDcMotorEx, private val ENCODER_SCALER:Double = 1.0, private val rf: OptimumDcMotorEx, private val rb: OptimumDcMotorEx, val RUN_MODE: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER, val RADIUS: Double = 2.0, TRACK_WIDTH: Double): MecanumDrive(TRACK_WIDTH){
+open class MecDrive(private val lf: OptimumDcMotorEx,
+                    private val lb: OptimumDcMotorEx,
+                    private val rf: OptimumDcMotorEx,
+                    private val rb: OptimumDcMotorEx,
+                    private val RUN_MODE: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
+                    zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
+                    private val ENCODER_SCALER: Double = 1.0,
+                    private val RADIUS: Double = 2.0,
+                    TRACK_WIDTH: Double,
+                    WHEEL_BASE: Double)
+    : MecanumDrive(TRACK_WIDTH, WHEEL_BASE) {
     init {
         lf.mode = RUN_MODE
         lb.mode = RUN_MODE
         rf.mode = RUN_MODE
         rb.mode = RUN_MODE
+        lf.zeroPowerBehavior = zeroPowerBehavior
+        lb.zeroPowerBehavior = zeroPowerBehavior
+        rf.zeroPowerBehavior = zeroPowerBehavior
+        rb.zeroPowerBehavior = zeroPowerBehavior
     }
 
     fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward - strafeRight - turnClockwise, forward + strafeRight - turnClockwise)
@@ -29,16 +44,13 @@ open class MecDrive(private val lf: OptimumDcMotorEx, private val lb: OptimumDcM
         rb.power = rearRight / max
     }
 
-    fun radiansToInches(radians: Double) = radians * RADIUS * ENCODER_SCALER
+    fun radiansToInches(radians: Double) = MathUtil.radiansToInches(radians * ENCODER_SCALER, RADIUS)
 
-    override fun getWheelPositions(): List<Double> {
-        val positions = LinkedList<Double>()
-        positions.add(radiansToInches(lfRawRadians()))
-        positions.add(radiansToInches(lbRawRadians()))
-        positions.add(radiansToInches(rfRawRadians()))
-        positions.add(radiansToInches(rbRawRadians()))
-        return positions
-    }
+    override fun getWheelPositions() = ListOf(
+            radiansToInches(lfRawRadians()),
+            radiansToInches(lbRawRadians()),
+            radiansToInches(rfRawRadians()),
+            radiansToInches(rbRawRadians()))
 
     fun resetEncoders() {
         resetLFEncoder()

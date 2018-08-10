@@ -1,7 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors
 
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
-import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 
