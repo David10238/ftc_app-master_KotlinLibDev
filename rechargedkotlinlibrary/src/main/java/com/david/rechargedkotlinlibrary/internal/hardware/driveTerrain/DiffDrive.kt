@@ -39,8 +39,9 @@ abstract class DiffDrive(
         MAX_TURN_ACCEL: Double,
         var followerType:Follower = Follower.PIDVA,
         TRACK_WIDTH: Double,
-        private val localizer: Localizer?)
+        localizer: Localizer? = null)
     : TankDrive(TRACK_WIDTH), MTSubsystem, Localizer {
+    private val localizer = localizer?:this
     private val HARD_MAX_VEL: Double = 1.0 / kV
     override var biasPose = Pose2d(Vector2d(0.0, 0.0), 0.0)
 
@@ -61,7 +62,7 @@ abstract class DiffDrive(
 
     fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null, follower:TrajectoryFollower) {
         while (robot.opMode.opModeIsActive() && follower.isFollowing() && condition()) {
-            follower.update(getPos())
+            follower.update(localizer.getPos())
             action?.run()
         }
     }
@@ -72,7 +73,7 @@ abstract class DiffDrive(
         waitOnFollower(condition, action, follower)
     }
 
-    fun trajectoryBuilder(pos: Pose2d = getPos(), constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
+    fun trajectoryBuilder(pos: Pose2d = localizer.getPos(), constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
     private val followerPIDVA = TankPIDVAFollower(drive = this, displacementCoeffs = DISPLACEMENT_PID_COEFFICIENTS, crossTrackCoeffs =  CROSSTRACK_PID_COEFFICIENTS, kV = kV, kA = kA, kStatic = kStatic)
     private val followerRamsete = RamseteFollower(drive = this, b = b, zeta = zeta, kV = kV, kA = kA, kStatic = kStatic)
@@ -111,7 +112,7 @@ abstract class DiffDrive(
     override fun getRawPos() = poseEstimate
     override fun updatePos() = updatePoseEstimate()
 
-    override fun update() = (localizer?:this).updatePos()
+    override fun update() = localizer.updatePos()
 
     override fun start() {
     }

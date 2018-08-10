@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry.Localizer
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.util.MathUtil
@@ -38,9 +39,11 @@ abstract class MecDrive(
         var MAX_VEL: Double = 1.0 / kV,
         val MAX_ACCEL: Double,
         val MAX_TURN_ACCEL: Double,
+        localizer: Localizer? = null,
         TRACK_WIDTH: Double,
         WHEEL_BASE: Double)
-    : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem {
+    : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem, Localizer{
+    private val localizer:Localizer = localizer?:this
 
     private val HARD_MAX_VEL: Double = 1.0 / kV
     var posBias = Pose2d(Vector2d(0.0, 0.0), 0.0)
@@ -64,7 +67,7 @@ abstract class MecDrive(
 
     fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null) {
         while (robot.opMode.opModeIsActive() && follower.isFollowing() && condition()) {
-            follower.update(getPos())
+            follower.update(localizer.getPos())
             action?.run()
         }
     }
@@ -74,7 +77,7 @@ abstract class MecDrive(
         waitOnFollower(condition, action)
     }
 
-    fun trajectoryBuilder(pos: Pose2d = getPos(), constraints: MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
+    fun trajectoryBuilder(pos: Pose2d = localizer.getPos(), constraints: MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
 
     fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward - strafeRight - turnClockwise, forward + strafeRight - turnClockwise)
@@ -126,16 +129,13 @@ abstract class MecDrive(
     fun rfRawRadians() = rf.getRawRadians()
     fun rbRawRadians() = rb.getRawRadians()
 
-    abstract fun updatePos()
-    abstract fun getRawPos(): Pose2d
-    fun getPos() = getRawPos() + posBias
-    override fun update() = updatePos()
+    override fun update() = localizer.updatePos()
     override fun start() {
     }
 
-    fun resetPos() = setPos(Pose2d(Vector2d(0.0, 0.0), 0.0))
-    fun setPos(pos: Pose2d) {
-        posBias = -pos
-    }
+    override var biasPose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 
+    override fun updatePos() = updatePoseEstimate()
+
+    override fun getRawPos() = poseEstimate
 }
