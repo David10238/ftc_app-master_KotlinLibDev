@@ -31,6 +31,6 @@ class ExampleMecDrive(robot:RobotTemplate) : MecDrive(
         MAX_ACCEL = 1.0,
         MAX_TURN_ACCEL = 1.0
 ){
-    override fun getPos(): Pose2d = super.poseEstimate
+    override fun getRawPos(): Pose2d = super.poseEstimate
     override fun updatePos() = super.updatePoseEstimate()
 }

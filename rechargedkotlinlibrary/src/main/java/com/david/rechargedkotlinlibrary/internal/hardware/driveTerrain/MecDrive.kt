@@ -1,6 +1,7 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain
 
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.acmerobotics.roadrunner.drive.MecanumDrive
 import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower
@@ -39,7 +40,9 @@ abstract class MecDrive(private val robot: RobotTemplate,
                         TRACK_WIDTH: Double,
                         WHEEL_BASE: Double)
     : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem {
+
     private val HARD_MAX_VEL: Double = 1.0 / kV
+    var posBias = Pose2d(Vector2d(0.0, 0.0), 0.0)
 
     init {
         MAX_VEL = Math.min(HARD_MAX_VEL, MAX_VEL)
@@ -122,8 +125,15 @@ abstract class MecDrive(private val robot: RobotTemplate,
     fun rbRawRadians() = rb.getRawRadians()
 
     abstract fun updatePos()
-    abstract fun getPos(): Pose2d
+    abstract fun getRawPos(): Pose2d
+    fun getPos() = getRawPos() + posBias
     override fun update() = updatePos()
     override fun start() {
     }
+
+    fun resetPos() = setPos(Pose2d(Vector2d(0.0, 0.0), 0.0))
+    fun setPos(pos:Pose2d) {
+        posBias = -pos
+    }
+
 }
