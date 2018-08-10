@@ -1,9 +1,16 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain
 
+import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.acmerobotics.roadrunner.drive.MecanumDrive
+import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower
+import com.acmerobotics.roadrunner.trajectory.Trajectory
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
+import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
+import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
-import com.david.rechargedkotlinlibrary.internal.hardware.management.SameThreadSubsystem
 import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 import com.qualcomm.robotcore.hardware.DcMotor
 import java.util.*
@@ -12,27 +19,65 @@ import kotlin.math.abs
 /**
  * Created by David Lukens on 8/2/2018.
  */
-open class MecDrive(private val lf: OptimumDcMotorEx,
-                    private val lb: OptimumDcMotorEx,
-                    private val rf: OptimumDcMotorEx,
-                    private val rb: OptimumDcMotorEx,
-                    private val RUN_MODE: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
-                    zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
-                    private val ENCODER_SCALER: Double = 1.0,
-                    private val RADIUS: Double = 2.0,
-                    TRACK_WIDTH: Double,
-                    WHEEL_BASE: Double)
-    : MecanumDrive(TRACK_WIDTH, WHEEL_BASE) {
+abstract class MecDrive(private val robot: RobotTemplate,
+                        private val lf: OptimumDcMotorEx,
+                        private val lb: OptimumDcMotorEx,
+                        private val rf: OptimumDcMotorEx,
+                        private val rb: OptimumDcMotorEx,
+                        mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
+                        zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
+                        private val ENCODER_SCALER: Double = 1.0,
+                        private val RADIUS: Double = 2.0,
+                        AXIAL_PID_COEFFICIENTS: PIDCoefficients,
+                        TURN_PID_COEFFICIENTS: PIDCoefficients,
+                        kA: Double,
+                        kV: Double,
+                        kStatic: Double,
+                        var MAX_VEL: Double = 1.0 / kV,
+                        val MAX_ACCEL: Double,
+                        val MAX_TURN_ACCEL: Double,
+                        TRACK_WIDTH: Double,
+                        WHEEL_BASE: Double)
+    : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem {
+    private val HARD_MAX_VEL: Double = 1.0 / kV
+
     init {
-        lf.mode = RUN_MODE
-        lb.mode = RUN_MODE
-        rf.mode = RUN_MODE
-        rb.mode = RUN_MODE
+        MAX_VEL = Math.min(HARD_MAX_VEL, MAX_VEL)
+        lf.mode = mode
+        lb.mode = mode
+        rf.mode = mode
+        rb.mode = mode
         lf.zeroPowerBehavior = zeroPowerBehavior
         lb.zeroPowerBehavior = zeroPowerBehavior
         rf.zeroPowerBehavior = zeroPowerBehavior
         rb.zeroPowerBehavior = zeroPowerBehavior
+        robot.thread.addSubsystem(this)
     }
+
+    private val baseConstraints = DriveConstraints(1.0 / kV, MAX_VEL, MAX_ACCEL, MAX_TURN_ACCEL)
+    val hardConstraints = MecanumConstraints(baseConstraints, trackWidth, wheelBase)
+    val follower = MecanumPIDVAFollower(this, AXIAL_PID_COEFFICIENTS, TURN_PID_COEFFICIENTS, kA = kA, kV = kV, kStatic = kStatic)
+
+    fun waitOnFollower(condition: () -> Boolean, action: Runnable?) {
+        while (robot.opMode.opModeIsActive() && follower.isFollowing() && condition()) {
+            follower.update(getPos())
+            action?.run()
+        }
+    }
+
+    fun waitOnFollower(action: Runnable) = waitOnFollower({ true }, action)
+    fun waitOnFollower(condition: () -> Boolean) = waitOnFollower(condition, null)
+    fun waitOnFollower() {
+        waitOnFollower({true}, null)
+    }
+
+    fun waitOnTrajectory(trajectory: Trajectory) {
+        follower.followTrajectory(trajectory)
+        waitOnFollower()
+    }
+
+    fun trajectoryBuilder(pos: Pose2d = getPos(), constraints:MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
+
 
     fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward - strafeRight - turnClockwise, forward + strafeRight - turnClockwise)
 
@@ -46,11 +91,14 @@ open class MecDrive(private val lf: OptimumDcMotorEx,
 
     fun radiansToInches(radians: Double) = MathUtil.radiansToInches(radians * ENCODER_SCALER, RADIUS)
 
-    override fun getWheelPositions() = ListOf(
-            radiansToInches(lfRawRadians()),
-            radiansToInches(lbRawRadians()),
-            radiansToInches(rfRawRadians()),
-            radiansToInches(rbRawRadians()))
+    override fun getWheelPositions(): List<Double> {
+        val positions = LinkedList<Double>()
+        positions.add(radiansToInches(lfRawRadians()))
+        positions.add(radiansToInches(lbRawRadians()))
+        positions.add(radiansToInches(rfRawRadians()))
+        positions.add(radiansToInches(rbRawRadians()))
+        return positions
+    }
 
     fun resetEncoders() {
         resetLFEncoder()
@@ -79,4 +127,10 @@ open class MecDrive(private val lf: OptimumDcMotorEx,
     fun lbRawRadians() = lb.getRawRadians()
     fun rfRawRadians() = rf.getRawRadians()
     fun rbRawRadians() = rb.getRawRadians()
+
+    abstract fun updatePos()
+    abstract fun getPos(): Pose2d
+    override fun update() = updatePos()
+    override fun start() {
+    }
 }

@@ -5,8 +5,8 @@ package com.david.rechargedkotlinlibrary.internal.hardware.management
  */
 
 class HardwareThread(val robot: RobotTemplate) : Thread() {
-    private val components = LinkedHashSet<ThreadedSubsystem>()
-    fun addSubsystem(subsystem: ThreadedSubsystem) = components.add(subsystem)
+    private val components = LinkedHashSet<MTSubsystem>()
+    fun addSubsystem(subsystem: MTSubsystem) = components.add(subsystem)
     override fun run() {
         components.forEach({ it.start() })
         while (!robot.opMode.isStopRequested) {
