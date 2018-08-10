@@ -58,22 +58,15 @@ abstract class MecDrive(private val robot: RobotTemplate,
     val hardConstraints = MecanumConstraints(baseConstraints, trackWidth, wheelBase)
     val follower = MecanumPIDVAFollower(this, AXIAL_PID_COEFFICIENTS, TURN_PID_COEFFICIENTS, kA = kA, kV = kV, kStatic = kStatic)
 
-    fun waitOnFollower(condition: () -> Boolean, action: Runnable?) {
+    fun waitOnFollower(condition: () -> Boolean = {true}, action: Runnable? = null) {
         while (robot.opMode.opModeIsActive() && follower.isFollowing() && condition()) {
             follower.update(getPos())
             action?.run()
         }
     }
-
-    fun waitOnFollower(action: Runnable) = waitOnFollower({ true }, action)
-    fun waitOnFollower(condition: () -> Boolean) = waitOnFollower(condition, null)
-    fun waitOnFollower() {
-        waitOnFollower({true}, null)
-    }
-
-    fun waitOnTrajectory(trajectory: Trajectory) {
+    fun waitOnTrajectory(trajectory: Trajectory, condition: () -> Boolean = {true}, runnable: Runnable? = null){
         follower.followTrajectory(trajectory)
-        waitOnFollower()
+        waitOnFollower(condition, runnable)
     }
 
     fun trajectoryBuilder(pos: Pose2d = getPos(), constraints:MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
