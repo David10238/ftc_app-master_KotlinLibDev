@@ -7,7 +7,12 @@ import com.acmerobotics.roadrunner.Vector2d
  * Created by David Lukens on 8/10/2018.
  */
 interface Localizer {
-    fun setPos(pos: Pose2d)
-    fun getPos():Pose2d
-    fun resetPos() = setPos(getPos())
+    var biasPose:Pose2d
+    fun updatePos()
+    fun setPos(pos: Pose2d) {
+        biasPose = -pos
+    }
+    fun getPos():Pose2d = getRawPos() + biasPose
+    fun resetPos() = setPos(getRawPos())
+    fun getRawPos():Pose2d
 }

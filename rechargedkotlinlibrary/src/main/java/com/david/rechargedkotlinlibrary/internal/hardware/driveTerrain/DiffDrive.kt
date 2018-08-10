@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.TankConstraints
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry.Localizer
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -37,10 +38,11 @@ abstract class DiffDrive(
         MAX_ACCEL: Double,
         MAX_TURN_ACCEL: Double,
         var followerType:Follower = Follower.PIDVA,
-        TRACK_WIDTH: Double)
-    : TankDrive(TRACK_WIDTH), MTSubsystem {
+        TRACK_WIDTH: Double,
+        private val localizer: Localizer?)
+    : TankDrive(TRACK_WIDTH), MTSubsystem, Localizer {
     private val HARD_MAX_VEL: Double = 1.0 / kV
-    var posBias = Pose2d(Vector2d(0.0, 0.0), 0.0)
+    override var biasPose = Pose2d(Vector2d(0.0, 0.0), 0.0)
 
     init {
         leftMotors.forEach {
@@ -106,15 +108,10 @@ abstract class DiffDrive(
         rightMotors.forEach { it.power = right }
     }
 
-    abstract fun updatePos()
-    abstract fun getRawPos(): Pose2d
-    fun getPos() = getRawPos() + posBias
-    override fun update() = updatePos()
+    override fun getRawPos() = poseEstimate
+    override fun updatePos() = updatePoseEstimate()
 
-    fun resetPos() = setPos(Pose2d(Vector2d(0.0, 0.0), 0.0))
-    fun setPos(pos: Pose2d) {
-        posBias = -pos
-    }
+    override fun update() = (localizer?:this).updatePos()
 
     override fun start() {
     }
