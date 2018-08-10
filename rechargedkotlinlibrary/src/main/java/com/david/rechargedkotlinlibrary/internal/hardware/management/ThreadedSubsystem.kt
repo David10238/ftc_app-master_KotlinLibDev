@@ -8,4 +8,5 @@ abstract class ThreadedSubsystem(robot: RobotTemplate) : Subsystem(robot), MTSub
     init {
         robot.thread.addSubsystem(this)
     }
+    override fun start(){}
 }

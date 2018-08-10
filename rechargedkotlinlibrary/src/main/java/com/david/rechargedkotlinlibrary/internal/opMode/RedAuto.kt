@@ -6,10 +6,4 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
  * Created by David Lukens on 8/2/2018.
  */
 
-abstract class RedAuto<rt : RobotTemplate>(createRobot: (RechargedLinearOpMode<rt>) -> rt) : RechargedLinearOpMode<rt>(createRobot) {
-    @Throws(InterruptedException::class)
-    override fun runOpMode() {
-        alliance = Alliance.RED
-        handleFlow(true)
-    }
-}
+abstract class RedAuto<rt : RobotTemplate>(createRobot: (RechargedLinearOpMode<rt>) -> rt) : RechargedLinearOpMode<rt>(true, Alliance.RED, createRobot)
