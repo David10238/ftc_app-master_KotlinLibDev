@@ -20,25 +20,26 @@ import kotlin.math.abs
 /**
  * Created by David Lukens on 8/2/2018.
  */
-abstract class MecDrive(private val robot: RobotTemplate,
-                        private val lf: OptimumDcMotorEx,
-                        private val lb: OptimumDcMotorEx,
-                        private val rf: OptimumDcMotorEx,
-                        private val rb: OptimumDcMotorEx,
-                        mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
-                        zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
-                        private val ENCODER_SCALER: Double = 1.0,
-                        private val RADIUS: Double = 2.0,
-                        AXIAL_PID_COEFFICIENTS: PIDCoefficients,
-                        TURN_PID_COEFFICIENTS: PIDCoefficients,
-                        kA: Double,
-                        kV: Double,
-                        kStatic: Double,
-                        var MAX_VEL: Double = 1.0 / kV,
-                        val MAX_ACCEL: Double,
-                        val MAX_TURN_ACCEL: Double,
-                        TRACK_WIDTH: Double,
-                        WHEEL_BASE: Double)
+abstract class MecDrive(
+        private val robot: RobotTemplate,
+        private val lf: OptimumDcMotorEx,
+        private val lb: OptimumDcMotorEx,
+        private val rf: OptimumDcMotorEx,
+        private val rb: OptimumDcMotorEx,
+        mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
+        zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
+        private val ENCODER_SCALER: Double = 1.0,
+        private val RADIUS: Double = 2.0,
+        AXIAL_PID_COEFFICIENTS: PIDCoefficients,
+        TURN_PID_COEFFICIENTS: PIDCoefficients,
+        kA: Double,
+        kV: Double,
+        kStatic: Double,
+        var MAX_VEL: Double = 1.0 / kV,
+        val MAX_ACCEL: Double,
+        val MAX_TURN_ACCEL: Double,
+        TRACK_WIDTH: Double,
+        WHEEL_BASE: Double)
     : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem {
 
     private val HARD_MAX_VEL: Double = 1.0 / kV
@@ -61,18 +62,19 @@ abstract class MecDrive(private val robot: RobotTemplate,
     val hardConstraints = MecanumConstraints(baseConstraints, trackWidth, wheelBase)
     val follower = MecanumPIDVAFollower(this, AXIAL_PID_COEFFICIENTS, TURN_PID_COEFFICIENTS, kA = kA, kV = kV, kStatic = kStatic)
 
-    fun waitOnFollower(condition: () -> Boolean = {true}, action: Runnable? = null) {
+    fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null) {
         while (robot.opMode.opModeIsActive() && follower.isFollowing() && condition()) {
             follower.update(getPos())
             action?.run()
         }
     }
-    fun waitOnTrajectory(condition: () -> Boolean = {true}, action: Runnable? = null, trajectory: Trajectory){
+
+    fun waitOnTrajectory(condition: () -> Boolean = { true }, action: Runnable? = null, trajectory: Trajectory) {
         follower.followTrajectory(trajectory)
         waitOnFollower(condition, action)
     }
 
-    fun trajectoryBuilder(pos: Pose2d = getPos(), constraints:MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
+    fun trajectoryBuilder(pos: Pose2d = getPos(), constraints: MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
 
     fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward - strafeRight - turnClockwise, forward + strafeRight - turnClockwise)
@@ -132,7 +134,7 @@ abstract class MecDrive(private val robot: RobotTemplate,
     }
 
     fun resetPos() = setPos(Pose2d(Vector2d(0.0, 0.0), 0.0))
-    fun setPos(pos:Pose2d) {
+    fun setPos(pos: Pose2d) {
         posBias = -pos
     }
 

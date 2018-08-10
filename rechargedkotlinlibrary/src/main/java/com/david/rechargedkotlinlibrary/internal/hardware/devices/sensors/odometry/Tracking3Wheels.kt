@@ -19,7 +19,7 @@ class Tracking3Wheels(robot: RobotTemplate,
                       private val BACK_OFFSET: Double,
                       private val TICK_SCALER: Double = 1.0,
                       private var pos: Pose2d = Pose2d(Vector2d(0.0, 0.0), 0.0)) :
-        ThreadedSubsystem(robot) {
+        ThreadedSubsystem(robot), Localizer {
 
     override fun update() {
         val leftChange = LEFT_WHEEL.radiansChange()
@@ -38,8 +38,9 @@ class Tracking3Wheels(robot: RobotTemplate,
 
     private fun radiansToInches(radians: Double) = MathUtil.radiansToInches(radians * TICK_SCALER, RADIUS)
 
-    private fun setPos(pos:Pose2d) {
+    override fun setPos(pos:Pose2d) {
         this.pos = pos
     }
-    private fun getPos() = pos
+
+    override fun getPos() = pos
 }
