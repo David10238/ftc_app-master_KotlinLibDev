@@ -1,18 +1,20 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders
 
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.RevHub
-import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.util.MathUtil
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 
 /**
  * Created by David Lukens on 8/8/2018.
  */
-open class Encoder (private val HUB:RevHub, private val PORT:Int, private val PPR:Int){
+open class Encoder (private val HUB:RevHub, private val PORT:Int, private val PPR:Int, direction:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD){
     private var resetTicks = 0
+    private var secant = 1
     init {
+        setDirection(direction)
         reset()
     }
-    fun getRawTicks() = HUB.getEncoder(PORT)
+    fun getRawTicks() = HUB.getEncoder(PORT) * secant
     fun reset() {
         resetTicks = getRawTicks()
     }
@@ -21,7 +23,11 @@ open class Encoder (private val HUB:RevHub, private val PORT:Int, private val PP
     fun getRadians() = toRadians(getTicks())
     fun getRawRadians() = toRadians(getRawTicks())
 
-    private fun toRadians(ticks:Int):Double{
+    fun toRadians(ticks:Int):Double{
         return ticks / PPR * MathUtil.TAU
+    }
+
+    fun setDirection(direction:DcMotorSimple.Direction) {
+        secant = if(direction == DcMotorSimple.Direction.REVERSE) -1 else 0
     }
 }

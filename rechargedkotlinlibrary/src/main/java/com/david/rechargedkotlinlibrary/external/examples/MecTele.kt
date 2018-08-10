@@ -19,5 +19,6 @@ class MecTele : CompetetionTele<MecBot>({ opMode -> MecBot(opMode) }) {
         telemetry.addData("lt", c1.lt)
         telemetry.addData("rt", c1.rt)
         telemetry.addData("wheel positions", robot.drive.getWheelPositions())
+        telemetry.addData("Pos", robot.drive.getPos())
     }
 }

@@ -1,6 +1,7 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices
 
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders.Encoder
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.ThreadedSubsystem
 import com.qualcomm.robotcore.hardware.*
@@ -16,16 +17,15 @@ class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(co
     val HUB = configData.robot.getHub(configData.hub)
     private val MOTOR_TYPE = delegate.motorType
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
-    var resetPos = 0
 
-    fun ticksToRadians(ticks: Int) = ticks / TICKS_PER_REV * 2 * Math.PI
-    fun getRawRadians() = ticksToRadians(getRawPosition())
-    fun getRawPosition() = HUB.getEncoder(PORT)
-    fun getRadians() = ticksToRadians(currentPosition)
-    override fun getCurrentPosition() = getRawPosition() - resetPos
-    fun resetEncoder() {
-        resetPos = getRawPosition()
-    }
+    val encoder = Encoder(configData.robot.getHub(configData.hub), delegate.portNumber, TICKS_PER_REV as Int)
+
+    fun ticksToRadians(ticks: Int) = encoder.toRadians(ticks)
+    fun getRawRadians() = encoder.getRawRadians()
+    fun getRawPosition() = encoder.getRawTicks()
+    fun getRadians() = encoder.getRadians()
+    override fun getCurrentPosition() = encoder.getTicks()
+    fun resetEncoder() = encoder.reset()
 
     override fun isBusy(): Boolean = HUB.isAtTarget(PORT)
     override fun getPortNumber() = PORT
@@ -62,6 +62,8 @@ class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(co
     override fun getDirection(): DcMotorSimple.Direction = delegate.direction
     override fun setDirection(direction: DcMotorSimple.Direction?) {
         delegate.direction = direction
+        if(direction != null)
+            encoder.setDirection(direction)
     }
 
     override fun getTargetPosition() = delegate.targetPosition

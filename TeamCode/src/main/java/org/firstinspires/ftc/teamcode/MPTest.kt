@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.Vector2d
+import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 
 /**
@@ -21,6 +23,7 @@ class MPTest : FluidAuto<MPBot>({ opMode -> MPBot(opMode) }) {
                 .splineTo(Pose2d(0.0, 0.0, 0.0))
                 .turn(152.0)
                 .splineTo(Pose2d(115.0, 95.2, 0.0))
+                .lineTo(Vector2d(0.0, 0.0), ConstantInterpolator(45.0))
                 .turn(120.0)
                 .build())
     }
