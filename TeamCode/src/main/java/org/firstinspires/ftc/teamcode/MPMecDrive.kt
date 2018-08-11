@@ -30,7 +30,4 @@ class MPMecDrive(robot:RobotTemplate) : MecDrive(
         kStatic = 1.0,
         MAX_ACCEL = 1.0,
         MAX_TURN_ACCEL = 1.0
-){
-    override fun getRawPos(): Pose2d = super.poseEstimate
-    override fun updatePos() = super.updatePoseEstimate()
-}
+)

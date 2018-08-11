@@ -34,6 +34,5 @@ class DiffMPDrive(robot:RobotTemplate):DiffDrive(
         kStatic = 1.0,
         MAX_ACCEL = 0.0,
         MAX_TURN_ACCEL = 0.0,
-        TRACK_WIDTH = 0.0,
-        localizer = null
+        TRACK_WIDTH = 0.0
 )
