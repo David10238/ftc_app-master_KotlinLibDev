@@ -18,7 +18,7 @@ class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(co
     private val MOTOR_TYPE = delegate.motorType
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
 
-    val encoder = Encoder(configData.robot.getHub(configData.hub), delegate.portNumber, TICKS_PER_REV as Int)
+    val encoder = Encoder(configData.robot.getHub(configData.hub), delegate.portNumber, TICKS_PER_REV.toInt())
 
     fun ticksToRadians(ticks: Int) = encoder.toRadians(ticks)
     fun getRawRadians() = encoder.getRawRadians()
@@ -59,7 +59,7 @@ class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(co
     override fun getPIDCoefficients(mode: DcMotor.RunMode?) = delegate.getPIDCoefficients(mode)
     override fun setPIDCoefficients(mode: DcMotor.RunMode?, pidCoefficients: PIDCoefficients?) = delegate.setPIDCoefficients(mode, pidCoefficients)
     override fun getZeroPowerBehavior() = delegate.zeroPowerBehavior
-    override fun getDirection(): DcMotorSimple.Direction = delegate.direction
+    override fun getDirection() = delegate.direction
     override fun setDirection(direction: DcMotorSimple.Direction?) {
         delegate.direction = direction
         if(direction != null)
@@ -68,7 +68,7 @@ class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(co
 
     override fun getTargetPosition() = delegate.targetPosition
     override fun setVelocity(angularRate: Double, unit: AngleUnit?) = delegate.setVelocity(angularRate, unit)
-    override fun getController(): DcMotorController = delegate.controller
+    override fun getController() = delegate.controller
     override fun close() = delegate.close()
     override fun getVersion() = delegate.version
     override fun getDeviceName() = delegate.deviceName
@@ -77,9 +77,9 @@ class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(co
     }
 
     override fun getMode(): DcMotor.RunMode = delegate.mode
-    override fun getConnectionInfo(): String = delegate.connectionInfo
+    override fun getConnectionInfo() = delegate.connectionInfo
     override fun getVelocity(unit: AngleUnit?) = delegate.getVelocity(unit)
-    override fun getManufacturer(): HardwareDevice.Manufacturer = delegate.manufacturer
+    override fun getManufacturer() = delegate.manufacturer
     override fun setMode(mode: DcMotor.RunMode?) {
         delegate.mode = mode
     }

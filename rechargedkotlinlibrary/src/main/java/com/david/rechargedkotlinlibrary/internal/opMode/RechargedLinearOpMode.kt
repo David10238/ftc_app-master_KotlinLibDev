@@ -15,16 +15,22 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
 
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        robot = createRobot(this)
-        if (autonomous)
-            robot.start()
-        if (autonomous)
-            robot.autoPostInit()
-        waitForStart()
-        if (!autonomous)
-            robot.start()
-        runtime.reset()
-        run()
+        try {
+            robot = createRobot(this)
+            if (autonomous)
+                robot.start()
+            if (autonomous)
+                robot.autoPostInit()
+            waitForStart()
+            if (!autonomous)
+                robot.start()
+            runtime.reset()
+            run()
+        } catch (e: InterruptedException) {
+            throw e
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     @Throws(InterruptedException::class)

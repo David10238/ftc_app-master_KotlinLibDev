@@ -80,7 +80,7 @@ abstract class MecDrive(
     fun trajectoryBuilder(pos: Pose2d = localizer.getPos(), constraints: MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
 
-    fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward - strafeRight - turnClockwise, forward + strafeRight - turnClockwise)
+    fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward + strafeRight - turnClockwise, forward - strafeRight - turnClockwise)
 
     override fun setMotorPowers(frontLeft: Double, rearLeft: Double, rearRight: Double, frontRight: Double) {
         val max = Collections.max(listOf(abs(frontLeft), abs(rearLeft), abs(frontRight), abs(rearRight), 1.0))

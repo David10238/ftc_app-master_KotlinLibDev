@@ -24,7 +24,7 @@ open class Encoder (private val HUB:RevHub, private val PORT:Int, private val PP
     fun getRawRadians() = toRadians(getRawTicks())
 
     fun toRadians(ticks:Int):Double{
-        return ticks / PPR * MathUtil.TAU
+        return (ticks.toDouble() / PPR.toDouble()) * MathUtil.TAU
     }
 
     fun setDirection(direction:DcMotorSimple.Direction) {
