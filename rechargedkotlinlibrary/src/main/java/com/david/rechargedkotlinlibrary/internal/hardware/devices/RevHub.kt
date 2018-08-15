@@ -32,8 +32,9 @@ class RevHub(val robot: RobotTemplate, config: String) {
     fun enablePhoneCharging(value: Boolean) = delegate.enablePhoneCharging(value)
     fun getEncoder(motorZ: Int):Int = response?.getEncoder(motorZ) ?: 0
     fun getDigitalInput(digitalInputZ: Int):Boolean = response?.getDigitalInput(digitalInputZ) ?: false
-    fun getAnalogInput(inputZ: Int) = response?.getAnalogInput(inputZ) ?: 0.0
+    fun getAnalogInput(inputZ: Int) = response?.getAnalogInput(inputZ) ?: 0
     fun getVelocity(motorZ: Int) = response?.getVelocity(motorZ) ?: 0.0
     fun isAtTarget(motorZ: Int):Boolean = response?.isAtTarget(motorZ) ?: false
     fun isOverCurrent(motorZ: Int):Boolean = response?.isOverCurrent(motorZ) ?: false
+    fun getVoltage(inputZ: Int):Double = getAnalogInput(inputZ) / 1000.0
 }
