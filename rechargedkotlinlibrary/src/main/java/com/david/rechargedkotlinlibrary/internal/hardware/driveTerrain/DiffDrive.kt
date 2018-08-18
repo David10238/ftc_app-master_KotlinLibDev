@@ -13,6 +13,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotor
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry.Localizer
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
+import com.david.rechargedkotlinlibrary.internal.roadRunner.RamseteConstraints
 import com.qualcomm.robotcore.hardware.DcMotor
 import java.util.*
 
@@ -29,11 +30,10 @@ abstract class DiffDrive(
         private val RADIUS: Double = 2.0,
         DISPLACEMENT_PID_COEFFICIENTS: PIDCoefficients,
         CROSSTRACK_PID_COEFFICIENTS: PIDCoefficients,
-        b:Double,
-        zeta:Double,
-        kA: Double,
+        ramseteConstraints: RamseteConstraints = RamseteConstraints(),
+        kA: Double = 0.0,
         kV: Double,
-        kStatic: Double,
+        kStatic: Double = 0.0,
         MAX_VEL: Double = 1.0 / kV,
         MAX_ACCEL: Double,
         MAX_TURN_ACCEL: Double,
@@ -76,7 +76,7 @@ abstract class DiffDrive(
     fun trajectoryBuilder(pos: Pose2d = localizer.getPos(), constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
     private val followerPIDVA = TankPIDVAFollower(drive = this, displacementCoeffs = DISPLACEMENT_PID_COEFFICIENTS, crossTrackCoeffs =  CROSSTRACK_PID_COEFFICIENTS, kV = kV, kA = kA, kStatic = kStatic)
-    private val followerRamsete = RamseteFollower(drive = this, b = b, zeta = zeta, kV = kV, kA = kA, kStatic = kStatic)
+    private val followerRamsete = RamseteFollower(drive = this, b = ramseteConstraints.b, zeta = ramseteConstraints.zeta, kV = kV, kA = kA, kStatic = kStatic)
 
     enum class Follower{
         RAMSETE,
