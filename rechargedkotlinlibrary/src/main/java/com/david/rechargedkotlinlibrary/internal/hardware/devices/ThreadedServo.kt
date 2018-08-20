@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.ServoController
 /**
  * Created by David Lukens on 8/3/2018.
  */
-class ThreadedServo(robot: RobotTemplate, config: String, min: Double = 0.0, startingPosition: Double, max: Double = 1.0, direction: Servo.Direction = Servo.Direction.FORWARD, private var constantlyRemindHub: Boolean = false) : ThreadedSubsystem(robot), Servo {
+class ThreadedServo(robot: RobotTemplate, config: String, min: Double = 0.0, startingPosition: Double, max: Double = 1.0, private var constantlyRemindHub: Boolean = true) : ThreadedSubsystem(robot), Servo {
     private val delegate = hMap.servo.get(config)
     private var positionCache: Double = startingPosition
     private var lastPositionCache: Double = -startingPosition
