@@ -1,13 +1,13 @@
 package com.david.rechargedkotlinlibrary.internal.opMode
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
+import net.frogbots.ftcopmodetunercommon.opmode.TunableLinearOpMode
 
 /**
  * Created by David Lukens on 8/2/2018.
  */
-abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous: Boolean, var alliance: Alliance = Alliance.FLUID, private val createRobot: (RechargedLinearOpMode<rt>) -> rt) : LinearOpMode() {
+abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous: Boolean, var alliance: Alliance = Alliance.FLUID, private val createRobot: (RechargedLinearOpMode<rt>) -> rt) : TunableLinearOpMode() {
     lateinit var robot: rt
     fun isAutonomous(): Boolean = autonomous
 
