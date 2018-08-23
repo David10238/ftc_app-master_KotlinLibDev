@@ -12,11 +12,11 @@ import kotlin.math.abs
  */
 
 @TeleOp(name = "KotlinTest")
-class KotlinTest : LinearOpMode(){
-    private lateinit var lf:DcMotor
-    private lateinit var lb:DcMotor
-    private lateinit var rf:DcMotor
-    private lateinit var rb:DcMotor
+class KotlinTest : LinearOpMode() {
+    private lateinit var lf: DcMotor
+    private lateinit var lb: DcMotor
+    private lateinit var rf: DcMotor
+    private lateinit var rb: DcMotor
 
     override fun runOpMode() {
         lf = hardwareMap.dcMotor.get("lf")
@@ -39,16 +39,16 @@ class KotlinTest : LinearOpMode(){
 
         waitForStart()
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             power(-gamepad1.left_stick_y.toDouble(), gamepad1.left_stick_x.toDouble(), gamepad1.right_stick_x.toDouble())
         }
     }
 
-    fun power(f:Double, sr:Double, tc:Double){
-        var lfp:Double = f + sr + tc
-        var lbp:Double = f - sr + tc
-        var rfp:Double = f - sr - tc
-        var rbp:Double = f + sr - tc
+    fun power(f: Double, sr: Double, tc: Double) {
+        var lfp: Double = f + sr + tc
+        var lbp: Double = f - sr + tc
+        var rfp: Double = f - sr - tc
+        var rbp: Double = f + sr - tc
         val max = Collections.max(listOf(abs(lfp), abs(lbp), abs(rfp), abs(rbp), 1.0))
         lfp /= max
         lbp /= max

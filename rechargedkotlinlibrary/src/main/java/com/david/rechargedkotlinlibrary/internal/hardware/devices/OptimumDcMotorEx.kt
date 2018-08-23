@@ -2,9 +2,11 @@ package com.david.rechargedkotlinlibrary.internal.hardware.devices
 
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders.Encoder
-import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.hardware.management.ThreadedSubsystem
-import com.qualcomm.robotcore.hardware.*
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 
@@ -62,7 +64,7 @@ class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(co
     override fun getDirection() = delegate.direction
     override fun setDirection(direction: DcMotorSimple.Direction?) {
         delegate.direction = direction
-        if(direction != null)
+        if (direction != null)
             encoder.setDirection(direction)
     }
 

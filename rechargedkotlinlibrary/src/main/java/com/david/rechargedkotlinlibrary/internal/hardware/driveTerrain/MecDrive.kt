@@ -42,8 +42,8 @@ abstract class MecDrive(
         localizer: Localizer? = null,
         TRACK_WIDTH: Double,
         WHEEL_BASE: Double)
-    : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem, Localizer{
-    private val localizer:Localizer = localizer?:this
+    : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem, Localizer {
+    private val localizer: Localizer = localizer ?: this
 
     private val HARD_MAX_VEL: Double = 1.0 / kV
     var posBias = Pose2d(Vector2d(0.0, 0.0), 0.0)

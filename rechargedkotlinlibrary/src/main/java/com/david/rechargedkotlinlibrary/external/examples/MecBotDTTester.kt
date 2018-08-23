@@ -11,6 +11,7 @@ class MecBotDTTester : PracticeTeleOp<MecBot>({ opMode -> MecBot(opMode) }) {
     companion object {
         const val NAME = "MecBotDTTester"
     }
+
     var lf = false
     var lb = false
     var rf = false

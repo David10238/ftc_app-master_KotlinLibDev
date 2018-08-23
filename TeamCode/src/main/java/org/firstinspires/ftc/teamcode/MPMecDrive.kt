@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode
 
-import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.DcMotorMaker
@@ -12,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 /**
  * Created by David Lukens on 8/9/2018.
  */
-class MPMecDrive(robot:RobotTemplate) : MecDrive(
+class MPMecDrive(robot: RobotTemplate) : MecDrive(
         robot = robot,
         lf = DcMotorMaker.instantiate(ConfigData(robot, 0, "lf"), direction = DcMotorSimple.Direction.REVERSE),
         lb = DcMotorMaker.instantiate(ConfigData(robot, 0, "lb"), direction = DcMotorSimple.Direction.REVERSE),

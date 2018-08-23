@@ -16,7 +16,7 @@ class Tracking3Wheels(
         private val TRACK_WIDTH: Double,
         private val BACK_OFFSET: Double,
         private val TICK_SCALER: Double = 1.0
-        ) : Localizer {
+) : Localizer {
 
     override var biasPose: Pose2d = Pose2d(0.0, 0.0, 0.0)
     var data = Pose2d(0.0, 0.0, 0.0)

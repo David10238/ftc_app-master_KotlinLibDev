@@ -4,7 +4,9 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.acmerobotics.roadrunner.drive.TankDrive
-import com.acmerobotics.roadrunner.followers.*
+import com.acmerobotics.roadrunner.followers.RamseteFollower
+import com.acmerobotics.roadrunner.followers.TankPIDVAFollower
+import com.acmerobotics.roadrunner.followers.TrajectoryFollower
 import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
@@ -16,7 +18,6 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
 import com.david.rechargedkotlinlibrary.internal.hardware.states.ControlLoopStates
 import com.david.rechargedkotlinlibrary.internal.roadRunner.RamseteConstraints
 import com.qualcomm.robotcore.hardware.DcMotor
-import org.apache.commons.math3.geometry.partitioning.Side
 import java.util.*
 
 /**
@@ -39,11 +40,11 @@ abstract class DiffDrive(
         MAX_VEL: Double = 1.0 / kV,
         MAX_ACCEL: Double,
         MAX_TURN_ACCEL: Double,
-        var followerType:Follower = Follower.PIDVA,
+        var followerType: Follower = Follower.PIDVA,
         TRACK_WIDTH: Double,
         localizer: Localizer? = null)
     : TankDrive(TRACK_WIDTH), MTSubsystem, Localizer {
-    private val localizer = localizer?:this
+    private val localizer = localizer ?: this
     private val HARD_MAX_VEL: Double = 1.0 / kV
     override var biasPose = Pose2d(Vector2d(0.0, 0.0), 0.0)
     private var controlState = ControlLoopStates.OPEN
@@ -74,17 +75,17 @@ abstract class DiffDrive(
 
     fun trajectoryBuilder(pos: Pose2d = localizer.getPos(), constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
-    private val followerPIDVA = TankPIDVAFollower(drive = this, displacementCoeffs = DISPLACEMENT_PID_COEFFICIENTS, crossTrackCoeffs =  CROSSTRACK_PID_COEFFICIENTS, kV = kV, kA = kA, kStatic = kStatic)
+    private val followerPIDVA = TankPIDVAFollower(drive = this, displacementCoeffs = DISPLACEMENT_PID_COEFFICIENTS, crossTrackCoeffs = CROSSTRACK_PID_COEFFICIENTS, kV = kV, kA = kA, kStatic = kStatic)
     private val followerRamsete = RamseteFollower(drive = this, b = ramseteConstraints.b, zeta = ramseteConstraints.zeta, kV = kV, kA = kA, kStatic = kStatic)
 
-    enum class Follower{
+    enum class Follower {
         RAMSETE,
         PIDVA,
     }
 
-    fun getFollower(type:Follower = Follower.PIDVA):TrajectoryFollower{
-        return when(type){
-            Follower.PIDVA -> followerPIDVA
+    fun getFollower(type: Follower = Follower.PIDVA): TrajectoryFollower {
+        return when (type) {
+            Follower.PIDVA   -> followerPIDVA
             Follower.RAMSETE -> followerRamsete
         }
     }
@@ -111,16 +112,16 @@ abstract class DiffDrive(
     override fun getRawPos() = poseEstimate
     override fun updatePos() = updatePoseEstimate()
 
-    private var activeTrajectoryFollower:TrajectoryFollower? = null
+    private var activeTrajectoryFollower: TrajectoryFollower? = null
 
     override fun update() {
         localizer.updatePos()
-        when(controlState){
+        when (controlState) {
             ControlLoopStates.CLOSED -> {
                 val follower = activeTrajectoryFollower
                 follower?.update(localizer.getPos())
             }
-            ControlLoopStates.OPEN -> {
+            ControlLoopStates.OPEN   -> {
                 val powers = openLoopWheelPowers.copy()
                 setMotorPowers(powers.l, powers.r)
             }
@@ -130,24 +131,25 @@ abstract class DiffDrive(
     override fun start() {
     }
 
-    fun startFollowingTrajectory(trajectory:Trajectory, followType:Follower = followerType){
+    fun startFollowingTrajectory(trajectory: Trajectory, followType: Follower = followerType) {
         val follower = getFollower(followType)
         follower.followTrajectory(trajectory)
         setActiveTrajectoryFollower(follower)
     }
 
-    fun followingTrajectory(): Boolean = activeTrajectoryFollower?.isFollowing()?:false
+    fun followingTrajectory(): Boolean = activeTrajectoryFollower?.isFollowing() ?: false
 
-    fun setActiveTrajectoryFollower(follower:TrajectoryFollower){
+    fun setActiveTrajectoryFollower(follower: TrajectoryFollower) {
         controlState = ControlLoopStates.CLOSED
         activeTrajectoryFollower = follower
     }
 
-    fun openLoopPowerWheels(l:Double, r:Double){
+    fun openLoopPowerWheels(l: Double, r: Double) {
         controlState = ControlLoopStates.OPEN
         openLoopWheelPowers = SidePowers(l = l, r = r)
     }
 
     var openLoopWheelPowers = SidePowers(l = 0.0, r = 0.0)
-    data class SidePowers(val l:Double, val r:Double)
+
+    data class SidePowers(val l: Double, val r: Double)
 }

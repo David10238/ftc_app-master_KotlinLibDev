@@ -5,7 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.RevHub
 /**
  * Created by David Lukens on 8/9/2018.
  */
-class RevPotentiometer (port:Int, hub:RevHub){
+class RevPotentiometer(port: Int, hub: RevHub) {
     private val delegate = OptimumAnalogInput(port, hub)
 
     fun getDegrees() = delegate.getVoltage() * SCALER
