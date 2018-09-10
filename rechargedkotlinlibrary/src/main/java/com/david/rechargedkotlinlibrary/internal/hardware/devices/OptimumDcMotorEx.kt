@@ -13,7 +13,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 /**
  * Created by David Lukens on 8/7/2018.
  */
-class OptimumDcMotorEx(configData: ConfigData) : DcMotorEx, ThreadedSubsystem(configData.robot) {
+class OptimumDcMotorEx(configData: ConfigData,
+                       mode: DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER,
+                       zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
+                       direction:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD) : DcMotorEx, ThreadedSubsystem(configData.robot) {
+    init {
+        setMode(mode)
+        setZeroPowerBehavior(zeroPowerBehavior)
+        setDirection(direction)
+    }
     val delegate = hMap.get(DcMotorEx::class.java, configData.config)
     val PORT = delegate.portNumber
     val HUB = configData.robot.getHub(configData.hub)
