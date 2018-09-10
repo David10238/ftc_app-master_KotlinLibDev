@@ -1,7 +1,9 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.management
 
+import com.acmerobotics.roadrunner.drive.Drive
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.RevHub
 import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
+import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.HardwareMap
 import java.util.*
 
@@ -29,4 +31,7 @@ abstract class RobotTemplate(val opMode: RechargedLinearOpMode<out RobotTemplate
         sameThreadSubsystems.forEach({ it.start() })
         onStart()
     }
+
+    abstract fun getDrive():Drive
+    abstract fun getGyro():BNO055IMU
 }
