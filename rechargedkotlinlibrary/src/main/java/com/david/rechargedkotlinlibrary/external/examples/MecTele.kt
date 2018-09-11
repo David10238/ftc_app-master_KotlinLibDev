@@ -1,12 +1,14 @@
 package com.david.rechargedkotlinlibrary.external.examples
 
 import com.david.rechargedkotlinlibrary.internal.opMode.CompetetionTele
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 /**
  * Created by David Lukens on 8/2/2018.
  */
 @TeleOp(name = MecTele.NAME)
+@Disabled
 class MecTele : CompetetionTele<MecBot>({ opMode -> MecBot(opMode) }) {
     companion object {
         const val NAME = "MecTele"

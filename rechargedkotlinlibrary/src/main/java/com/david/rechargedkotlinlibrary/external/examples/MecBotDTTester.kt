@@ -1,12 +1,14 @@
 package com.david.rechargedkotlinlibrary.external.examples
 
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 /**
  * Created by David Lukens on 8/8/2018.
  */
 @TeleOp(name = MecBotDTTester.NAME)
+@Disabled
 class MecBotDTTester : PracticeTeleOp<MecBot>({ opMode -> MecBot(opMode) }) {
     companion object {
         const val NAME = "MecBotDTTester"
